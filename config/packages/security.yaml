@@ -1,0 +1,55 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\Usuarios
+                property: nombreUsuario
+    
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            provider: app_user_provider
+            entry_point: App\Security\LoginFormAuthenticator
+            #Config del login
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                enable_csrf: true
+                # Redirección tras login
+                default_target_path: app_home
+            logout:
+                path: app_logout
+                target: app_login
+            custom_authenticator: App\Security\LoginFormAuthenticator
+
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
+    
+    role_hierarchy:
+        ROLE_MASTER: ROLE_USER
+        ROLE_ADMIN: [ROLE_MASTER, ROLE_ALLOWED_TO_SWITCH]
+
+    access_control:
+        - { path: ^/login$, roles: PUBLIC_ACCESS }
+
+        - { path: ^/admin, roles: [ROLE_MASTER, ROLE_ADMIN] }
+        
+        - { path: ^/, roles: ROLE_USER }
+      
+when@test:
+    security:
+        password_hashers:
+          
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4 
+                time_cost: 3 
+                memory_cost: 

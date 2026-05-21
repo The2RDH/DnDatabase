@@ -1,0 +1,68 @@
+parameters:
+    locale: 'es'
+
+services:
+    _defaults:
+        autowire: true      
+        autoconfigure: true
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Admin/'
+
+    App\Admin\UsuariosAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Usuarios, manager_type: orm, group: 'Usuarios y Jugadores', label: 'Usuarios' }
+
+    App\Admin\JugadoresAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Jugadores, manager_type: orm, group: 'Usuarios y Jugadores', label: 'Jugadores' }
+
+    App\Admin\PersonajeAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Personaje, manager_type: orm, group: 'Personajes', label: 'Personaje'}
+
+    App\Admin\NpcAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Npc, manager_type: orm, group: 'Npcs', label: 'Npcs'}
+
+    App\Admin\EnemigosAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Enemigos, manager_type: orm, group: 'Enemigos', label: 'Esbirros Enemigos'}
+
+    App\Admin\EscuelasMagiaAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\EscuelasMagia, manager_type: orm, group: 'Magia', label: 'Escuelas de Magia'}
+
+    App\Admin\RecursosAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Recursos, manager_type: orm, group: 'Aventura y Combate', label: 'Recursos' }
+    
+    App\Admin\AlineamientoAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Alineamiento, manager_type: orm, group: 'Reglas y Características', label: 'Alineamiento'}
+
+    App\Admin\RazasAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Razas, manager_type: orm, group: 'Reglas y Características', label: 'Razas'}
+
+    App\Admin\RasgosAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Rasgos, manager_type: orm, group: 'Reglas y Características', label: 'Rasgos'}
+
+    App\Admin\ClasesAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Clases, manager_type: orm, group: 'Reglas y Características', label: 'Clases'}
+
+    App\Admin\EspecializacionAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Especializacion, manager_type: orm, group: 'Reglas y Características', label: 'Especializacion'}
+    
+    App\Admin\DadosAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Dados, manager_type: orm, group: 'Reglas y Características', label: 'Dados'}
+   

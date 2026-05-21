@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class LobbyController extends AbstractController
+{
+    // Aquí definimos la URL '/lobby' y su nombre interno 'app_lobby'
+    #[Route('/lobby', name: 'app_lobby')]
+    public function index(): Response
+    {
+        return $this->render('lobby/index.html.twig', [
+            'controller_name' => 'Lobby de Jugadores',
+        ]);
+    }
+}

@@ -1,0 +1,30 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysqlRol
+    restart: always
+    environment:
+      MYSQL_DATABASE: BaseDatosPartida
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+
+  adminer:
+    image: adminer
+    container_name: adminerRol
+    restart: always
+    ports:
+      - "8080:8080"
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: phpRol
+    command: php -S 0.0.0.0:8000 -t public
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
