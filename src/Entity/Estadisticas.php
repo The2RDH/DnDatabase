@@ -120,8 +120,32 @@ class Estadisticas
     #[ORM\Column(nullable: true)]
     private ?int $competencia = null;
 
+    /**
+     * @var Collection<int, Jefes>
+     */
+    #[ORM\OneToMany(targetEntity: Jefes::class, mappedBy: 'estadisticas')]
+    private Collection $jefes;
+
+    #[ORM\OneToOne(mappedBy: 'estadisticas', cascade: ['persist', 'remove'])]
+    private ?Personaje $personaje = null;
+
+    /**
+     * @var Collection<int, Npc>
+     */
+    #[ORM\OneToMany(targetEntity: Npc::class, mappedBy: 'estadisticas')]
+    private Collection $npcs;
+
+    /**
+     * @var Collection<int, Enemigos>
+     */
+    #[ORM\OneToMany(targetEntity: Enemigos::class, mappedBy: 'estadisticas')]
+    private Collection $enemigos;
+
     public function __construct()
     {
+        $this->jefes = new ArrayCollection();
+        $this->npcs = new ArrayCollection();
+        $this->enemigos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -545,6 +569,118 @@ class Estadisticas
     public function setCompetencia(?int $competencia): static
     {
         $this->competencia = $competencia;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Jefes>
+     */
+    public function getJefes(): Collection
+    {
+        return $this->jefes;
+    }
+
+    public function addJefe(Jefes $jefe): static
+    {
+        if (!$this->jefes->contains($jefe)) {
+            $this->jefes->add($jefe);
+            $jefe->setEstadisticas($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJefe(Jefes $jefe): static
+    {
+        if ($this->jefes->removeElement($jefe)) {
+            // set the owning side to null (unless already changed)
+            if ($jefe->getEstadisticas() === $this) {
+                $jefe->setEstadisticas(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPersonaje(): ?Personaje
+    {
+        return $this->personaje;
+    }
+
+    public function setPersonaje(?Personaje $personaje): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($personaje === null && $this->personaje !== null) {
+            $this->personaje->setEstadisticas(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($personaje !== null && $personaje->getEstadisticas() !== $this) {
+            $personaje->setEstadisticas($this);
+        }
+
+        $this->personaje = $personaje;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Npc>
+     */
+    public function getNpcs(): Collection
+    {
+        return $this->npcs;
+    }
+
+    public function addNpc(Npc $npc): static
+    {
+        if (!$this->npcs->contains($npc)) {
+            $this->npcs->add($npc);
+            $npc->setEstadisticas($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNpc(Npc $npc): static
+    {
+        if ($this->npcs->removeElement($npc)) {
+            // set the owning side to null (unless already changed)
+            if ($npc->getEstadisticas() === $this) {
+                $npc->setEstadisticas(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Enemigos>
+     */
+    public function getEnemigos(): Collection
+    {
+        return $this->enemigos;
+    }
+
+    public function addEnemigo(Enemigos $enemigo): static
+    {
+        if (!$this->enemigos->contains($enemigo)) {
+            $this->enemigos->add($enemigo);
+            $enemigo->setEstadisticas($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEnemigo(Enemigos $enemigo): static
+    {
+        if ($this->enemigos->removeElement($enemigo)) {
+            // set the owning side to null (unless already changed)
+            if ($enemigo->getEstadisticas() === $this) {
+                $enemigo->setEstadisticas(null);
+            }
+        }
 
         return $this;
     }

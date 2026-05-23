@@ -30,6 +30,11 @@ class Asentamientos
     #[ORM\OneToMany(targetEntity: Lugares::class, mappedBy: 'asentamiento')]
     private Collection $lugares;
 
+    public function __toString(): string
+    {
+        return $this->nombre ?? 'Sin establecer';
+    }
+    
     public function __construct()
     {
         $this->lugares = new ArrayCollection();

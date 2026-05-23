@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\BarajasRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BarajasRepository::class)]
@@ -13,58 +15,41 @@ class Barajas
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 30)]
-    private ?string $carta = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $imagen = null;
-
-    #[ORM\Column]
-    private ?int $copias = null;
+    #[ORM\Column(length: 255)]
+    private ?string $nombre = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $descripcion = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $baraja = null;
+    /**
+     * @var Collection<int, CartasBaraja>
+     */
+    #[ORM\OneToMany(targetEntity: CartasBaraja::class, mappedBy: 'baraja')]
+    private Collection $cartasBarajas;
+
+    public function __toString(): string
+    {
+        return $this->nombre ?: 'Nueva Baraja';
+    }
+    
+    public function __construct()
+    {
+        $this->cartasBarajas = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCarta(): ?string
+    public function getNombre(): ?string
     {
-        return $this->carta;
+        return $this->nombre;
     }
 
-    public function setCarta(string $carta): static
+    public function setNombre(string $nombre): static
     {
-        $this->carta = $carta;
-
-        return $this;
-    }
-
-    public function getImagen(): ?string
-    {
-        return $this->imagen;
-    }
-
-    public function setImagen(?string $imagen): static
-    {
-        $this->imagen = $imagen;
-
-        return $this;
-    }
-
-    public function getCopias(): ?int
-    {
-        return $this->copias;
-    }
-
-    public function setCopias(int $copias): static
-    {
-        $this->copias = $copias;
+        $this->nombre = $nombre;
 
         return $this;
     }
@@ -81,14 +66,32 @@ class Barajas
         return $this;
     }
 
-    public function getBaraja(): ?string
+    /**
+     * @return Collection<int, CartasBaraja>
+     */
+    public function getCartasBarajas(): Collection
     {
-        return $this->baraja;
+        return $this->cartasBarajas;
     }
 
-    public function setBaraja(string $baraja): static
+    public function addCartasBaraja(CartasBaraja $cartasBaraja): static
     {
-        $this->baraja = $baraja;
+        if (!$this->cartasBarajas->contains($cartasBaraja)) {
+            $this->cartasBarajas->add($cartasBaraja);
+            $cartasBaraja->setBaraja($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCartasBaraja(CartasBaraja $cartasBaraja): static
+    {
+        if ($this->cartasBarajas->removeElement($cartasBaraja)) {
+            // set the owning side to null (unless already changed)
+            if ($cartasBaraja->getBaraja() === $this) {
+                $cartasBaraja->setBaraja(null);
+            }
+        }
 
         return $this;
     }

@@ -60,9 +60,27 @@ class Personaje
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $token = null;
 
+    #[ORM\OneToOne(mappedBy: 'personaje', cascade: ['persist', 'remove'])]
+    private ?ArbolPersonajes $arbolPersonajes = null;
+
+    /**
+     * @var Collection<int, Inventario>
+     */
+    #[ORM\OneToMany(targetEntity: Inventario::class, mappedBy: 'personaje')]
+    private Collection $inventarios;
+
+    #[ORM\OneToOne(inversedBy: 'personaje', cascade: ['persist', 'remove'])]
+    private ?Estadisticas $estadisticas = null;
+
+    public function __toString(): string
+    {
+        return $this->nombre ?? 'Personaje sin nombre';
+    }
+
     public function __construct()
     {
         $this->idiomas = new ArrayCollection();
+        $this->inventarios = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -253,5 +271,69 @@ class Personaje
     public function getNombreCompleto(): string
     {
         return trim(($this->nombre ?? '') . ' ' . ($this->apellido ?? ''));
+    }
+
+    public function getArbolPersonajes(): ?ArbolPersonajes
+    {
+        return $this->arbolPersonajes;
+    }
+
+    public function setArbolPersonajes(?ArbolPersonajes $arbolPersonajes): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($arbolPersonajes === null && $this->arbolPersonajes !== null) {
+            $this->arbolPersonajes->setPersonaje(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($arbolPersonajes !== null && $arbolPersonajes->getPersonaje() !== $this) {
+            $arbolPersonajes->setPersonaje($this);
+        }
+
+        $this->arbolPersonajes = $arbolPersonajes;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Inventario>
+     */
+    public function getInventarios(): Collection
+    {
+        return $this->inventarios;
+    }
+
+    public function addInventario(Inventario $inventario): static
+    {
+        if (!$this->inventarios->contains($inventario)) {
+            $this->inventarios->add($inventario);
+            $inventario->setPersonaje($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInventario(Inventario $inventario): static
+    {
+        if ($this->inventarios->removeElement($inventario)) {
+            // set the owning side to null (unless already changed)
+            if ($inventario->getPersonaje() === $this) {
+                $inventario->setPersonaje(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getEstadisticas(): ?Estadisticas
+    {
+        return $this->estadisticas;
+    }
+
+    public function setEstadisticas(?Estadisticas $estadisticas): static
+    {
+        $this->estadisticas = $estadisticas;
+
+        return $this;
     }
 }

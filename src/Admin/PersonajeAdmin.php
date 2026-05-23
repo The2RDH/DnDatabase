@@ -6,15 +6,20 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Form\Type\AdminType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Entity\Personaje;
+use App\Entity\Clases;
+use App\Entity\Razas;
+use App\Entity\Alineamiento;
+use App\Entity\Jugadores;
+use App\Entity\Estadisticas;
 
 class PersonajeAdmin extends AbstractAdmin
 {
-    //Metodo para cabecera de CRUD
     public function toString(object $object): string
     {
         return $object instanceof Personaje && $object->getId()
@@ -50,9 +55,18 @@ class PersonajeAdmin extends AbstractAdmin
                 'label' => 'Jugador',
                 'header_style' => 'width: 15%;'
             ])
+            ->add('estadisticas', null, [
+                'label' => 'ID Estadísticas',
+                'row_align' => 'center',
+                'header_style' => 'text-align: center; width: 110px;',
+                'associated_property' => 'id', 
+                'route' => [
+                    'name' => 'edit'
+                ],
+            ])
             ->add('_action', 'actions', [
                 'label' => 'Acciones',
-                'header_style' => 'text-align: center; width: 150px;',
+                'header_style' => 'text-align: center; width: 15%;',
                 'actions' => [
                     'edit' => [],
                     'delete' => [],
@@ -87,14 +101,14 @@ class PersonajeAdmin extends AbstractAdmin
                     'required' => false
                 ])
                 ->add('alineamiento', EntityType::class, [
-                    'class' => \App\Entity\Alineamiento::class,
+                    'class' => Alineamiento::class,
                     'choice_label' => 'nombre',
                     'label' => 'Alineamiento',
                     'placeholder' => 'Selecciona alineamiento...',
                     'required' => false
                 ])
                 ->add('jugador', EntityType::class, [
-                    'class' => \App\Entity\Jugadores::class, 
+                    'class' => Jugadores::class, 
                     'choice_label' => 'nombre', 
                     'label' => 'Jugador Dueño',
                     'placeholder' => 'Selecciona un jugador...',
@@ -107,16 +121,35 @@ class PersonajeAdmin extends AbstractAdmin
                     'empty_data' => '1'
                 ])
                 ->add('clase', EntityType::class, [
-                    'class' => \App\Entity\Clases::class,
+                    'class' => Clases::class,
                     'choice_label' => 'nombre',
                     'label' => 'Clase',
                     'placeholder' => 'Selecciona clase...',
                 ])
                 ->add('raza', EntityType::class, [
-                    'class' => \App\Entity\Razas::class,
+                    'class' => Razas::class,
                     'choice_label' => 'nombre',
                     'label' => 'Raza',
                     'placeholder' => 'Selecciona raza...',
+                ])
+                ->add('estadisticas', EntityType::class, [
+                    'class' => Estadisticas::class,
+                    'label' => 'Hoja de estadísticas (ID)',
+                    'placeholder' => 'Selecciona un ID de estadísticas...',
+                    'required' => true, 
+                    'attr' => ['class' => 'select2'], 
+                    'choice_label' => function (Estadisticas $est) {
+                        return sprintf(
+                            'ID: %d — [FUE: %d | DES: %d | CON: %d | INT: %d | SAB: %d | CAR: %d]',
+                            $est->getId(),
+                            $est->getFuerza(), 
+                            $est->getDestreza(), 
+                            $est->getConstitucion(),
+                            $est->getIntelecto(),
+                            $est->getSabiduria(),
+                            $est->getCarisma()
+                        );
+                    },
                 ])
             ->end()
 

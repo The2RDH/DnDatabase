@@ -34,18 +34,35 @@ class Jefes
      * @var Collection<int, AtaquesJefe>
      */
     #[ORM\OneToMany(targetEntity: AtaquesJefe::class, mappedBy: 'jefe')]
-    private Collection $ataquesJeves;
+    private Collection $ataquesjefes;
 
     /**
      * @var Collection<int, RasgosJefe>
      */
     #[ORM\OneToMany(targetEntity: RasgosJefe::class, mappedBy: 'jefe')]
-    private Collection $rasgosJeves;
+    private Collection $rasgosjefes;
+
+    #[ORM\ManyToOne(inversedBy: 'jefes')]
+    private ?Especializacion $especializacion = null;
+
+    #[ORM\ManyToOne(inversedBy: 'jefes')]
+    private ?Estadisticas $estadisticas = null;
+
+    #[ORM\Column]
+    private ?bool $descubierto = null;
+
+    #[ORM\ManyToOne(inversedBy: 'jefes')]
+    private ?Estado $estado = null;
+
+    public function __toString(): string
+    {
+        return $this->nombre ?? 'Sin definir';
+    }
 
     public function __construct()
     {
-        $this->ataquesJeves = new ArrayCollection();
-        $this->rasgosJeves = new ArrayCollection();
+        $this->ataquesjefes = new ArrayCollection();
+        $this->rasgosjefes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -116,15 +133,15 @@ class Jefes
     /**
      * @return Collection<int, AtaquesJefe>
      */
-    public function getAtaquesJeves(): Collection
+    public function getAtaquesJefes(): Collection
     {
-        return $this->ataquesJeves;
+        return $this->ataquesjefes;
     }
 
     public function addAtaquesJefe(AtaquesJefe $ataquesJefe): static
     {
-        if (!$this->ataquesJeves->contains($ataquesJefe)) {
-            $this->ataquesJeves->add($ataquesJefe);
+        if (!$this->ataquesjefes->contains($ataquesJefe)) {
+            $this->ataquesjefes->add($ataquesJefe);
             $ataquesJefe->setJefe($this);
         }
 
@@ -133,7 +150,7 @@ class Jefes
 
     public function removeAtaquesJefe(AtaquesJefe $ataquesJefe): static
     {
-        if ($this->ataquesJeves->removeElement($ataquesJefe)) {
+        if ($this->ataquesjefes->removeElement($ataquesJefe)) {
             // set the owning side to null (unless already changed)
             if ($ataquesJefe->getJefe() === $this) {
                 $ataquesJefe->setJefe(null);
@@ -146,15 +163,15 @@ class Jefes
     /**
      * @return Collection<int, RasgosJefe>
      */
-    public function getRasgosJeves(): Collection
+    public function getRasgosjefes(): Collection
     {
-        return $this->rasgosJeves;
+        return $this->rasgosjefes;
     }
 
     public function addRasgosJefe(RasgosJefe $rasgosJefe): static
     {
-        if (!$this->rasgosJeves->contains($rasgosJefe)) {
-            $this->rasgosJeves->add($rasgosJefe);
+        if (!$this->rasgosjefes->contains($rasgosJefe)) {
+            $this->rasgosjefes->add($rasgosJefe);
             $rasgosJefe->setJefe($this);
         }
 
@@ -163,12 +180,60 @@ class Jefes
 
     public function removeRasgosJefe(RasgosJefe $rasgosJefe): static
     {
-        if ($this->rasgosJeves->removeElement($rasgosJefe)) {
+        if ($this->rasgosjefes->removeElement($rasgosJefe)) {
             // set the owning side to null (unless already changed)
             if ($rasgosJefe->getJefe() === $this) {
                 $rasgosJefe->setJefe(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEspecializacion(): ?Especializacion
+    {
+        return $this->especializacion;
+    }
+
+    public function setEspecializacion(?Especializacion $especializacion): static
+    {
+        $this->especializacion = $especializacion;
+
+        return $this;
+    }
+
+    public function getEstadisticas(): ?Estadisticas
+    {
+        return $this->estadisticas;
+    }
+
+    public function setEstadisticas(?Estadisticas $estadisticas): static
+    {
+        $this->estadisticas = $estadisticas;
+
+        return $this;
+    }
+
+    public function isDescubierto(): ?bool
+    {
+        return $this->descubierto;
+    }
+
+    public function setDescubierto(bool $descubierto): static
+    {
+        $this->descubierto = $descubierto;
+
+        return $this;
+    }
+
+    public function getEstado(): ?Estado
+    {
+        return $this->estado;
+    }
+
+    public function setEstado(?Estado $estado): static
+    {
+        $this->estado = $estado;
 
         return $this;
     }

@@ -27,9 +27,16 @@ class Estado
     #[ORM\OneToMany(targetEntity: Npc::class, mappedBy: 'estado')]
     private Collection $npcs;
 
+    /**
+     * @var Collection<int, Jefes>
+     */
+    #[ORM\OneToMany(targetEntity: Jefes::class, mappedBy: 'estado')]
+    private Collection $jefes;
+
     public function __construct()
     {
         $this->npcs = new ArrayCollection();
+        $this->jefes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -90,6 +97,36 @@ class Estado
             // set the owning side to null (unless already changed)
             if ($npc->getEstado() === $this) {
                 $npc->setEstado(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Jefes>
+     */
+    public function getJefes(): Collection
+    {
+        return $this->jefes;
+    }
+
+    public function addJefe(Jefes $jefe): static
+    {
+        if (!$this->jefes->contains($jefe)) {
+            $this->jefes->add($jefe);
+            $jefe->setEstado($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJefe(Jefes $jefe): static
+    {
+        if ($this->jefes->removeElement($jefe)) {
+            // set the owning side to null (unless already changed)
+            if ($jefe->getEstado() === $this) {
+                $jefe->setEstado(null);
             }
         }
 

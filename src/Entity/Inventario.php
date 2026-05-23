@@ -19,6 +19,9 @@ class Inventario
     #[ORM\Column(nullable: true)]
     private ?int $cantidad = null;
 
+    #[ORM\ManyToOne(inversedBy: 'inventarios')]
+    private ?Personaje $personaje = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +47,18 @@ class Inventario
     public function setCantidad(?int $cantidad): static
     {
         $this->cantidad = $cantidad;
+
+        return $this;
+    }
+
+    public function getPersonaje(): ?Personaje
+    {
+        return $this->personaje;
+    }
+
+    public function setPersonaje(?Personaje $personaje): static
+    {
+        $this->personaje = $personaje;
 
         return $this;
     }

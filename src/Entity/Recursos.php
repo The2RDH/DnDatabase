@@ -24,10 +24,6 @@ class Recursos
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $obtencion = null;
 
-    public function __toString(): string
-    {
-        return $this->nombre ?? 'Sin definir';
-    }
     /**
      * @var Collection<int, Clases>
      */
@@ -45,6 +41,11 @@ class Recursos
      */
     #[ORM\OneToMany(targetEntity: Especializacion::class, mappedBy: 'recurso', orphanRemoval: true)]
     private Collection $especializacions;
+
+    public function __toString(): string
+    {
+        return $this->nombre ?: 'Sin definir';
+    }
 
     public function __construct()
     {

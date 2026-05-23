@@ -46,6 +46,9 @@ class Npc
     #[ORM\Column]
     private ?bool $descubierto = null;
 
+    #[ORM\ManyToOne(inversedBy: 'npcs')]
+    private ?Estadisticas $estadisticas = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -179,6 +182,18 @@ class Npc
     public function setDescubierto(bool $descubierto): static
     {
         $this->descubierto = $descubierto;
+
+        return $this;
+    }
+
+    public function getEstadisticas(): ?Estadisticas
+    {
+        return $this->estadisticas;
+    }
+
+    public function setEstadisticas(?Estadisticas $estadisticas): static
+    {
+        $this->estadisticas = $estadisticas;
 
         return $this;
     }

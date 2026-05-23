@@ -17,6 +17,7 @@ use App\Entity\Especializacion;
 use App\Entity\Razas;
 use App\Entity\GrupoEnemigos;
 use App\Entity\TipoEnemigos;
+use App\Entity\Estadisticas;
 
 class EnemigosAdmin extends AbstractAdmin
 {
@@ -36,7 +37,7 @@ class EnemigosAdmin extends AbstractAdmin
             ])
             ->add('nivel', null, [
                 'label' => 'Desafío',
-                'header_style' => 'text-align: center; width: 90px;',
+                'header_style' => 'text-align: center; width: 5%;',
                 'row_align' => 'center'
             ])
             ->add('clase', null, [
@@ -51,18 +52,27 @@ class EnemigosAdmin extends AbstractAdmin
             ])
             ->add('tipo', null, [
                 'label' => 'Tipos',
-                'header_style' => 'width: 15%;',
+                'header_style' => 'width: 10%;',
                 'associated_property' => 'nombre'
-            ])
-            ->add('descubierto', 'boolean', [
-                'label' => 'Avistado',
-                'header_style' => 'text-align: center; width: 90px;',
-                'row_align' => 'center',
-                'editable' => true
             ])
             ->add('descripcion', null, [
                 'label' => 'Descripción',
                 'header_style' => 'width: 15%;'
+            ])
+            ->add('descubierto', 'boolean', [
+                'label' => 'Avistado',
+                'header_style' => 'text-align: center; width: 5%;',
+                'row_align' => 'center',
+                'editable' => true
+            ])
+            ->add('estadisticas', null, [
+                'label' => 'Estadísticas',
+                'row_align' => 'center',
+                'header_style' => 'text-align: center; width: 5%;',
+                'associated_property' => 'id', 
+                'route' => [
+                    'name' => 'edit'
+                ],
             ])
             ->add('_action', 'actions', [
                 'label' => 'Acciones',
@@ -140,7 +150,7 @@ class EnemigosAdmin extends AbstractAdmin
                 ->add('clase', EntityType::class, [
                     'class' => Clases::class,
                     'choice_label' => 'nombre',
-                    'label' => 'Clase Combativa',
+                    'label' => 'Clase',
                     'placeholder' => 'Selecciona estilo...',
                 ])
                 ->add('especializacion', EntityType::class, [
@@ -153,10 +163,29 @@ class EnemigosAdmin extends AbstractAdmin
                 ->add('raza', EntityType::class, [
                     'class' => Razas::class,
                     'choice_label' => 'nombre',
-                    'label' => 'Razas Aplicables (Múltiple)',
+                    'label' => 'Razas',
                     'multiple' => true,
                     'required' => false,
                     'property_path' => 'razas' 
+                ])
+                ->add('estadisticas', EntityType::class, [
+                    'class' => Estadisticas::class,
+                    'label' => 'Bloque de estadísticas (ID)',
+                    'placeholder' => 'Selecciona el bloque de estadísticas...',
+                    'required' => true, 
+                    'attr' => ['class' => 'select2'], 
+                    'choice_label' => function (Estadisticas $est) {
+                        return sprintf(
+                            'ID: %d — [FUE: %d | DES: %d | CON: %d | INT: %d | SAB: %d | CAR: %d]',
+                            $est->getId(),
+                            $est->getFuerza(),
+                            $est->getDestreza(),
+                            $est->getConstitucion(),
+                            $est->getIntelecto(),
+                            $est->getSabiduria(),
+                            $est->getCarisma()
+                        );
+                    },
                 ])
             ->end()
 

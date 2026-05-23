@@ -26,13 +26,18 @@ class AtaquesJefe
     private ?string $objetivos = null;
 
     #[ORM\Column(length: 50, nullable: true)]
-    private ?string $daño = null;
+    private ?string $danio = null;
 
     #[ORM\Column(length: 30, nullable: true)]
     private ?string $salvacion = null;
 
-    #[ORM\ManyToOne(inversedBy: 'ataquesJeves')]
+    #[ORM\ManyToOne(inversedBy: 'ataquesjefes')]
     private ?Jefes $jefe = null;
+
+    public function __toString(): string
+    {
+        return $this->nombre ?? 'Ataque sin nombre';
+    }
 
     public function getId(): ?int
     {
@@ -87,14 +92,14 @@ class AtaquesJefe
         return $this;
     }
 
-    public function getDaño(): ?string
+    public function getDanio(): ?string
     {
-        return $this->daño;
+        return $this->danio;
     }
 
-    public function setDaño(?string $daño): static
+    public function setDanio(?string $danio): static
     {
-        $this->daño = $daño;
+        $this->danio = $danio;
 
         return $this;
     }

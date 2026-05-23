@@ -30,6 +30,11 @@ class TiposHechizo
     #[ORM\OneToMany(targetEntity: Hechizos::class, mappedBy: 'tipo')]
     private Collection $hechizos;
 
+    public function __toString(): string
+    {
+        return $this->nombre ?? 'Sin nombre';
+    }
+    
     public function __construct()
     {
         $this->hechizos = new ArrayCollection();

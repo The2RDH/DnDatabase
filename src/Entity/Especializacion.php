@@ -25,9 +25,6 @@ class Especializacion
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $descripcion = null;
 
-    #[ORM\ManyToOne(inversedBy: 'especializaci�on')]
-    private ?DadosDescanso $dadosDescanso = null;
-
     #[ORM\ManyToOne(inversedBy: 'especializacions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Recursos $recurso = null;
@@ -44,10 +41,17 @@ class Especializacion
     #[ORM\OneToMany(targetEntity: Enemigos::class, mappedBy: 'especializacion')]
     private Collection $enemigos;
 
+    /**
+     * @var Collection<int, Jefes>
+     */
+    #[ORM\OneToMany(targetEntity: Jefes::class, mappedBy: 'especializaci�on')]
+    private Collection $jefes;
+
     public function __construct()
     {
         $this->npcs = new ArrayCollection();
         $this->enemigos = new ArrayCollection();
+        $this->jefes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -87,18 +91,6 @@ class Especializacion
     public function setDescripcion(?string $descripcion): static
     {
         $this->descripcion = $descripcion;
-
-        return $this;
-    }
-
-    public function getDadosDescanso(): ?DadosDescanso
-    {
-        return $this->dadosDescanso;
-    }
-
-    public function setDadosDescanso(?DadosDescanso $dadosDescanso): static
-    {
-        $this->dadosDescanso = $dadosDescanso;
 
         return $this;
     }
@@ -169,6 +161,36 @@ class Especializacion
             // set the owning side to null (unless already changed)
             if ($enemigo->getEspecializacion() === $this) {
                 $enemigo->setEspecializacion(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Jefes>
+     */
+    public function getJefes(): Collection
+    {
+        return $this->jefes;
+    }
+
+    public function addJefe(Jefes $jefe): static
+    {
+        if (!$this->jefes->contains($jefe)) {
+            $this->jefes->add($jefe);
+            $jefe->setEspecializacion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJefe(Jefes $jefe): static
+    {
+        if ($this->jefes->removeElement($jefe)) {
+            // set the owning side to null (unless already changed)
+            if ($jefe->getEspecializacion() === $this) {
+                $jefe->setEspecializacion(null);
             }
         }
 

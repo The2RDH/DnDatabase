@@ -19,7 +19,7 @@ class RasgosJefe
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $descripcion = null;
 
-    #[ORM\ManyToOne(inversedBy: 'rasgosJeves')]
+    #[ORM\ManyToOne(inversedBy: 'rasgosjefes')]
     private ?Jefes $jefe = null;
 
     public function getId(): ?int

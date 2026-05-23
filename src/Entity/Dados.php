@@ -21,17 +21,6 @@ class Dados
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $descripcion = null;
 
-    /**
-     * @var Collection<int, DadosDescanso>
-     */
-    #[ORM\OneToMany(targetEntity: DadosDescanso::class, mappedBy: 'dados')]
-    private Collection $dadosDescansos;
-
-    public function __construct()
-    {
-        $this->dadosDescansos = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -57,36 +46,6 @@ class Dados
     public function setDescripcion(?string $descripcion): static
     {
         $this->descripcion = $descripcion;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, DadosDescanso>
-     */
-    public function getDadosDescansos(): Collection
-    {
-        return $this->dadosDescansos;
-    }
-
-    public function addDadosDescanso(DadosDescanso $dadosDescanso): static
-    {
-        if (!$this->dadosDescansos->contains($dadosDescanso)) {
-            $this->dadosDescansos->add($dadosDescanso);
-            $dadosDescanso->setDados($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDadosDescanso(DadosDescanso $dadosDescanso): static
-    {
-        if ($this->dadosDescansos->removeElement($dadosDescanso)) {
-            // set the owning side to null (unless already changed)
-            if ($dadosDescanso->getDados() === $this) {
-                $dadosDescanso->setDados(null);
-            }
-        }
 
         return $this;
     }

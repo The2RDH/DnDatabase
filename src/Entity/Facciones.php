@@ -33,6 +33,11 @@ class Facciones
     #[ORM\OneToMany(targetEntity: GrupoEnemigos::class, mappedBy: 'faccion')]
     private Collection $grupoEnemigos;
 
+    public function __toString(): string
+    {
+        return $this->nombre ?: 'Sin definir';
+    }
+    
     public function __construct()
     {
         $this->grupoEnemigos = new ArrayCollection();

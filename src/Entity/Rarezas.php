@@ -27,6 +27,11 @@ class Rarezas
     #[ORM\OneToMany(targetEntity: Objetos::class, mappedBy: 'rareza')]
     private Collection $objetos;
 
+    public function __toString(): string 
+    {
+        return $this->nombre ?? 'Sin nombre';
+    }
+    
     public function __construct()
     {
         $this->objetos = new ArrayCollection();

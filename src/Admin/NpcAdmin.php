@@ -15,7 +15,7 @@ use App\Entity\Razas;
 use App\Entity\Clases;
 use App\Entity\Especializacion;
 use App\Entity\Estado;
-use Doctrine\DBAL\Types\BooleanType;
+use App\Entity\Estadisticas;
 
 class NpcAdmin extends AbstractAdmin
 {
@@ -54,6 +54,16 @@ class NpcAdmin extends AbstractAdmin
                 'label' => 'Estado',
                 'header_style' => 'width: 10%;'
             ])
+            ->add('estadisticas', null, [
+                'label' => 'ID Estadísticas',
+                'row_align' => 'center',
+                'header_style' => 'text-align: center; width: 110px;',
+                'associated_property' => 'id', 
+                'route' => [
+                    'name' => 'edit'
+                ],
+            ])
+
             ->add('descubierto', 'boolean', [
                 'label' => 'Descubierto',
                 'header_style' => 'text-align: center; width: 100px;',
@@ -131,6 +141,25 @@ class NpcAdmin extends AbstractAdmin
                     'label' => 'Especialización',
                     'placeholder' => 'Selecciona especialización...',
                     'required' => false
+                ])
+                ->add('estadisticas', EntityType::class, [
+                    'class' => Estadisticas::class,
+                    'label' => 'Hoja de estadísticas (ID)',
+                    'placeholder' => 'Selecciona un ID de estadísticas...',
+                    'required' => true, 
+                    'attr' => ['class' => 'select2'], 
+                    'choice_label' => function (Estadisticas $est) {
+                        return sprintf(
+                            'ID: %d — [FUE: %d | DES: %d | CON: %d | INT: %d | SAB: %d | CAR: %d]',
+                            $est->getId(),
+                            $est->getFuerza(),
+                            $est->getDestreza(),
+                            $est->getConstitucion(),
+                            $est->getIntelecto(),
+                            $est->getSabiduria(),
+                            $est->getCarisma()
+                        );
+                    },
                 ])
             ->end()
 

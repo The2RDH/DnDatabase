@@ -27,6 +27,11 @@ class TipoObjeto
     #[ORM\OneToMany(targetEntity: Objetos::class, mappedBy: 'tipoObjeto')]
     private Collection $objetos;
 
+    public function __toString(): string 
+    {
+        return $this->nombre ?? 'Sin nombre';
+    }
+
     public function __construct()
     {
         $this->objetos = new ArrayCollection();
@@ -73,7 +78,7 @@ class TipoObjeto
     {
         if (!$this->objetos->contains($objeto)) {
             $this->objetos->add($objeto);
-            $objeto->setTipoObjeto($this);
+            $objeto->setTipoObjetos($this);
         }
 
         return $this;
@@ -82,9 +87,8 @@ class TipoObjeto
     public function removeObjeto(Objetos $objeto): static
     {
         if ($this->objetos->removeElement($objeto)) {
-            // set the owning side to null (unless already changed)
-            if ($objeto->getTipoObjeto() === $this) {
-                $objeto->setTipoObjeto(null);
+            if ($objeto->getTipoObjetos() === $this) {
+                $objeto->setTipoObjetos(null);
             }
         }
 

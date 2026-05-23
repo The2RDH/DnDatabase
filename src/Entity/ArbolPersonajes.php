@@ -37,6 +37,9 @@ class ArbolPersonajes
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $residencia = null;
 
+    #[ORM\OneToOne(inversedBy: 'arbolPersonajes', cascade: ['persist', 'remove'])]
+    private ?Personaje $personaje = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -134,6 +137,18 @@ class ArbolPersonajes
     public function setResidencia(?string $residencia): static
     {
         $this->residencia = $residencia;
+
+        return $this;
+    }
+
+    public function getPersonaje(): ?Personaje
+    {
+        return $this->personaje;
+    }
+
+    public function setPersonaje(?Personaje $personaje): static
+    {
+        $this->personaje = $personaje;
 
         return $this;
     }

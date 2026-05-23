@@ -35,7 +35,8 @@ class Objetos
     private ?bool $consumible = null;
 
     #[ORM\ManyToOne(inversedBy: 'objetos')]
-    private ?TipoObjeto $tipoObjeto = null;
+    #[ORM\JoinColumn(name: "tipo_objeto_id", referencedColumnName: "id")]
+    private ?TipoObjeto $tipoObjetos = null;
 
     /**
      * @var Collection<int, Inventario>
@@ -48,6 +49,11 @@ class Objetos
      */
     #[ORM\OneToMany(targetEntity: OfertaComercial::class, mappedBy: 'objeto')]
     private Collection $ofertaComercials;
+
+    public function __toString(): string
+    {
+        return $this->nombre ?: 'Nuevo Objeto';
+    }
 
     public function __construct()
     {
@@ -132,14 +138,14 @@ class Objetos
         return $this;
     }
 
-    public function getTipoObjeto(): ?TipoObjeto
+    public function gettipoObjetos(): ?TipoObjeto
     {
-        return $this->tipoObjeto;
+        return $this->tipoObjetos;
     }
 
-    public function setTipoObjeto(?TipoObjeto $tipoObjeto): static
+    public function settipoObjetos(?TipoObjeto $tipoObjetos): static
     {
-        $this->tipoObjeto = $tipoObjeto;
+        $this->tipoObjetos = $tipoObjetos;
 
         return $this;
     }

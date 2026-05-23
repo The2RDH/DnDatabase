@@ -58,6 +58,9 @@ class Enemigos
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $descripcion = null;
 
+    #[ORM\ManyToOne(inversedBy: 'enemigos')]
+    private ?Estadisticas $estadisticas = null;
+
     public function __toString(): string
     {
         return $this->getNombre() ?? 'Nuevo Enemigo';
@@ -244,6 +247,18 @@ class Enemigos
     public function setDescripcion(?string $descripcion): static
     {
         $this->descripcion = $descripcion;
+
+        return $this;
+    }
+
+    public function getEstadisticas(): ?Estadisticas
+    {
+        return $this->estadisticas;
+    }
+
+    public function setEstadisticas(?Estadisticas $estadisticas): static
+    {
+        $this->estadisticas = $estadisticas;
 
         return $this;
     }
