@@ -72,6 +72,12 @@ class Personaje
     #[ORM\OneToOne(inversedBy: 'personaje', cascade: ['persist', 'remove'])]
     private ?Estadisticas $estadisticas = null;
 
+    /**
+     * @var Collection<int, Lore>
+     */
+    #[ORM\ManyToMany(targetEntity: Lore::class, mappedBy: 'personaje')]
+    private Collection $lores;
+
     public function __toString(): string
     {
         return $this->nombre ?? 'Personaje sin nombre';
@@ -81,6 +87,7 @@ class Personaje
     {
         $this->idiomas = new ArrayCollection();
         $this->inventarios = new ArrayCollection();
+        $this->lores = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -333,6 +340,33 @@ class Personaje
     public function setEstadisticas(?Estadisticas $estadisticas): static
     {
         $this->estadisticas = $estadisticas;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Lore>
+     */
+    public function getLores(): Collection
+    {
+        return $this->lores;
+    }
+
+    public function addLore(Lore $lore): static
+    {
+        if (!$this->lores->contains($lore)) {
+            $this->lores->add($lore);
+            $lore->addPersonaje($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLore(Lore $lore): static
+    {
+        if ($this->lores->removeElement($lore)) {
+            $lore->removePersonaje($this);
+        }
 
         return $this;
     }

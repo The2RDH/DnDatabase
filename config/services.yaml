@@ -39,6 +39,9 @@ services:
     App\Admin\NpcAdmin:
         tags:
             - { name: sonata.admin, model_class: App\Entity\Npc, manager_type: orm, group: 'Npcs', label: 'Npcs'}
+    App\Admin\OfertaComercialAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\OfertaComercial, manager_type: orm, group: 'Npcs', label: 'Tiendas NPCS'}
 
 #ENEMIGOS
     App\Admin\EnemigosAdmin:
@@ -138,6 +141,30 @@ services:
             - { name: sonata.admin, model_class: App\Entity\Origen, manager_type: orm, group: 'Mapa y Exploración', label: 'Origenes' }
 
 #LORE E HISTORIA
+    App\Admin\HistoriaAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Historia, manager_type: orm, group: 'Lore e Historia', label: 'Historia' }
+    App\Admin\CapitulosAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Capitulos, manager_type: orm, group: 'Lore e Historia', label: 'Capitulos' }
+    App\Admin\LoreAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Lore, manager_type: orm, group: 'Lore e Historia', label: 'Lore' }
+    App\Admin\IdiomasAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Idiomas, manager_type: orm, group: 'Lore e Historia', label: 'Idiomas' }
+    App\Admin\FaccionesAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Facciones, manager_type: orm, group: 'Lore e Historia', label: 'Facciones' }
+    App\Admin\JerarquiasAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Jerarquias, manager_type: orm, group: 'Lore e Historia', label: 'Jerarquias' }
+    App\Admin\ReligionesAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Religiones, manager_type: orm, group: 'Lore e Historia', label: 'Religiones' }
+    App\Admin\DeidadesAdmin:
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Deidades, manager_type: orm, group: 'Lore e Historia', label: 'Deidades' }
 
 #REGLAS Y CARACTERÍSTICAS
     App\Admin\AlineamientoAdmin:

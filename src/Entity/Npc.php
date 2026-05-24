@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\NpcRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: NpcRepository::class)]
@@ -48,6 +50,22 @@ class Npc
 
     #[ORM\ManyToOne(inversedBy: 'npcs')]
     private ?Estadisticas $estadisticas = null;
+
+    /**
+     * @var Collection<int, OfertaComercial>
+     */
+    #[ORM\OneToMany(targetEntity: OfertaComercial::class, mappedBy: 'npc')]
+    private Collection $ofertaComercials;
+
+    public function __toString(): string
+    {
+        return $this->nombre ?? 'Sin establecer';
+    }
+    
+    public function __construct()
+    {
+        $this->ofertaComercials = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -194,6 +212,36 @@ class Npc
     public function setEstadisticas(?Estadisticas $estadisticas): static
     {
         $this->estadisticas = $estadisticas;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OfertaComercial>
+     */
+    public function getOfertaComercials(): Collection
+    {
+        return $this->ofertaComercials;
+    }
+
+    public function addOfertaComercial(OfertaComercial $ofertaComercial): static
+    {
+        if (!$this->ofertaComercials->contains($ofertaComercial)) {
+            $this->ofertaComercials->add($ofertaComercial);
+            $ofertaComercial->setNpc($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOfertaComercial(OfertaComercial $ofertaComercial): static
+    {
+        if ($this->ofertaComercials->removeElement($ofertaComercial)) {
+            // set the owning side to null (unless already changed)
+            if ($ofertaComercial->getNpc() === $this) {
+                $ofertaComercial->setNpc(null);
+            }
+        }
 
         return $this;
     }

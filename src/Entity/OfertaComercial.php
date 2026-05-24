@@ -22,6 +22,9 @@ class OfertaComercial
     #[ORM\Column]
     private ?int $cantidad = null;
 
+    #[ORM\ManyToOne(inversedBy: 'ofertaComercials')]
+    private ?Npc $npc = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,6 +62,18 @@ class OfertaComercial
     public function setCantidad(int $cantidad): static
     {
         $this->cantidad = $cantidad;
+
+        return $this;
+    }
+
+    public function getNpc(): ?Npc
+    {
+        return $this->npc;
+    }
+
+    public function setNpc(?Npc $npc): static
+    {
+        $this->npc = $npc;
 
         return $this;
     }
