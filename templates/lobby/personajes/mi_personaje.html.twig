@@ -1,0 +1,56 @@
+{# templates/lobby/personajes/mi_personaje.html.twig #}
+{% extends 'lobby/personajes/detalle.html.twig' %}
+
+{% block title %}Mi Personaje - {{ personaje.nombre }} - Universo RPG{% endblock %}
+
+{% block boton_volver %}
+    <span class="badge bg-success px-3 py-2 border border-success-subtle rounded-pill">
+        <i class="fa-solid fa-user-check"></i> Vista de Propietario
+    </span>
+{% endblock %}
+
+{% block bloque_principal %}
+    {{ parent() }}
+    <div class="mt-5 pt-4 border-top">
+        <h4 class="mb-3 text-dark fw-bold">
+            <i class="fa-solid fa-book-bookmark text-warning"></i> Mis Crónicas y Lore Secreto
+        </h4>
+        <p class="text-muted small mb-4">
+            A continuación se muestran los fragmentos de historia, secretos y conocimientos del mundo que solo tu personaje conoce.
+        </p>
+
+        {% if personaje.lores is not empty %}
+            <div class="accordion shadow-sm rounded" id="accordionLorePrivado">
+                {% for lore in personaje.lores %}
+                    <div class="accordion-item border-start-0 border-end-0 border-top-0 mb-2 rounded bg-white">
+                        <h2 class="accordion-header" id="headingPrivado{{ lore.id }}">
+                            <button class="accordion-button collapsed fw-bold text-dark bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrivado{{ lore.id }}" aria-expanded="false" aria-controls="collapsePrivado{{ lore.id }}">
+                                <i class="fa-solid fa-scroll text-muted me-2 small"></i> {{ lore.titulo }}
+                            </button>
+                        </h2>
+                        <div id="collapsePrivado{{ lore.id }}" class="accordion-collapse collapse" aria-labelledby="headingPrivado{{ lore.id }}" data-bs-parent="#accordionLorePrivado">
+                            <div class="accordion-body bg-light text-secondary border-top px-4 py-3" style="line-height: 1.7; font-size: 0.95rem;">
+                                {{ lore.texto|nl2br }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="p-4 bg-light rounded text-center border border-dashed">
+                <i class="fa-solid fa-feather d-block fs-3 mb-2 text-muted"></i>
+                <p class="text-muted mb-0 italic">Tu personaje aún no tiene ningún fragmento de lore oculto o crónica secreta.</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block bloque_lateral %}
+    {{ parent() }}
+    
+    <div class="mt-4 pt-3 border-top bg-light p-3 rounded shadow-sm">
+        <h6 class="fw-bold text-secondary mb-2"><i class="fa-solid fa-id-card small"></i> Cuenta Vinculada</h6>
+        <small class="d-block text-muted"><strong>Nick de Comunidad:</strong> {{ personaje.jugador.nick }}</small>
+        <small class="d-block text-muted"><strong>Rol/Especialidad:</strong> {{ personaje.jugador.especialidad ?? 'Ninguna' }}</small>
+    </div>
+{% endblock %}

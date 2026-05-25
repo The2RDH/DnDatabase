@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container-fluid px-0">
+    <div class="mb-3">
+        {% block boton_volver %}
+            <a href="#" class="btn btn-link link-secondary p-0 text-decoration-none">
+                <i class="fa-solid fa-arrow-left"></i> Volver al listado
+            </a>
+        {% endblock %}
+    </div>
+
+    <div class="mb-4 border-bottom pb-3">
+        <h1 class="fw-bold text-dark display-6">{% block titulo_ficha %}Nombre del Elemento{% endblock %}</h1>
+        <p class="lead text-muted mb-0">{% block subtitulo_ficha %}Categoría o subtítulo de la ficha.{% endblock %}</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-12 col-xl-8">
+            <div class="card border-0 shadow-sm rounded p-4 h-100">
+                {% block bloque_principal %}
+                    <h5>Detalles Principales</h5>
+                    <p class="text-muted">Contenido de la crónica, biografía o descripción larga...</p>
+                {% endblock %}
+            </div>
+        </div>
+
+        <div class="col-12 col-xl-4">
+            <div class="card border-0 shadow-sm rounded p-4 h-100 bg-white">
+                {% block bloque_lateral %}
+                    <h5 class="border-bottom pb-2 mb-3">Información Adicional</h5>
+                    <p class="text-muted">Datos relacionales, fechas, creador, etc.</p>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

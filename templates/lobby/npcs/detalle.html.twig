@@ -1,0 +1,169 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ficha de {{ npc.nombre }} - Universo RPG{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    
+    <div class="mb-4">
+        <a href="{{ path('app_lobby_npcs') }}" class="btn btn-link link-secondary p-0 text-decoration-none">
+            <i class="fa-solid fa-arrow-left"></i> Volver al códice de NPCs
+        </a>
+    </div>
+
+    <div class="row g-4">
+        
+        <div class="col-12 col-md-4 col-lg-3">
+            <div class="card border-0 shadow-sm bg-white p-4 text-center h-100">
+                
+                <div class="d-inline-block mx-auto rounded-circle p-2 bg-light border border-secondary-subtle mb-3 shadow-sm" style="width: 140px; height: 140px;">
+                    <img src="{{ npc.token ? asset(npc.token) : asset('img/default_token.png') }}" 
+                         alt="{{ npc.nombre }}" 
+                         class="rounded-circle" 
+                         style="width: 120px; height: 120px; object-fit: cover;">
+                </div>
+
+                <h2 class="h4 fw-bold text-dark mb-1">{{ npc.nombre }}</h2>
+                <div class="mb-3">
+                    <span class="badge bg-secondary-subtle text-secondary border px-2.5 py-1.5 fs-7">
+                        Nivel {{ npc.nivel ?? '??' }}
+                    </span>
+                </div>
+
+                {% if npc.estado %}
+                    <div class="border-top pt-3 mt-2">
+                        <small class="text-muted d-block mb-1 fw-bold text-uppercase" style="font-size: 0.7rem;">Situación Actual</small>
+                        
+                        {% set estado_clean = npc.estado|lower %}
+                        <span class="badge w-100 py-2 fs-6 
+                            {% if estado_clean == 'vivo' %}
+                                bg-success-subtle text-success border border-success-subtle
+                            {% elseif estado_clean == 'muerto' %}
+                                bg-danger-subtle text-danger border border-danger-subtle
+                            {% elseif estado_clean == 'presuntamente muerto' %}
+                                bg-warning-subtle text-warning border border-warning-subtle
+                            {% else %}
+                                bg-light text-dark border
+                            {% endif %}">
+                            
+                            <i class="fa-solid 
+                                {% if estado_clean == 'vivo' %}
+                                    fa-heartbeat
+                                {% elseif estado_clean == 'muerto' %}
+                                    fa-skull-crossbones
+                                {% elseif estado_clean == 'presuntamente muerto' %}
+                                    fa-ghost
+                                {% else %}
+                                    fa-circle-question
+                                {% endif %} me-1 small"></i>
+                            
+                            {{ npc.estado }}
+                        </span>
+                    </div>
+                {% endif %}
+                
+                <div class="border-top pt-3 mt-3">
+                    <small class="text-muted d-block mb-1 fw-bold text-uppercase" style="font-size: 0.7rem;">Ubicación Conocida</small>
+                    <span class="badge w-100 py-2 fs-6 bg-info-subtle text-info-emphasis border border-info-subtle text-wrap">
+                        <i class="fa-solid fa-map-location-dot me-1 small"></i>
+                        {{ npc.lugar ? npc.lugar : 'Desconocida / En viaje' }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm bg-white p-4 h-100 d-flex flex-column justify-content-between">
+                
+                <div>
+                    <h3 class="h4 border-bottom pb-2 mb-4 text-dark fw-bold">
+                        <i class="fa-solid fa-address-card text-success"></i> Datos del Personaje
+                    </h3>
+
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="p-3 bg-light rounded border">
+                                <h4 class="h6 fw-bold text-secondary mb-3">
+                                    <i class="fa-solid fa-dna text-info me-1"></i> Rasgos Físicos
+                                </h4>
+                                <ul class="list-unstyled mb-0 lh-lg text-dark">
+                                    <li class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                                        <span class="text-muted">Estatura / Altura:</span>
+                                        <strong>{{ npc.altura ?? 'Desconocida' }}</strong>
+                                    </li>
+                                    <li class="d-flex justify-content-between">
+                                        <span class="text-muted">Masa / Peso:</span>
+                                        <strong>{{ npc.peso ?? 'Desconocido' }}</strong>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="p-3 bg-light rounded border">
+                                <h4 class="h6 fw-bold text-secondary mb-3">
+                                    <i class="fa-solid fa-shield-halved text-warning me-1"></i> Arquetipo y Rol
+                                </h4>
+                                <ul class="list-unstyled mb-0 lh-lg text-dark">
+                                    <li class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                                        <span class="text-muted">Raza Especie:</span>
+                                        <strong>{{ npc.raza ? npc.raza : 'Sin Raza Coherente' }}</strong>
+                                    </li>
+                                    <li class="d-flex justify-content-between {% if npc.especializacion %}border-bottom pb-1 mb-1{% endif %}">
+                                        <span class="text-muted">Clase Profesión:</span>
+                                        <strong>{{ npc.clase ? npc.clase : 'Habitante Común' }}</strong>
+                                    </li>
+                                    
+                                    {% if npc.especializacion %}
+                                        <li class="d-flex justify-content-between">
+                                            <span class="text-muted">Especialización:</span>
+                                            <span class="badge bg-dark-subtle text-dark border border-dark-subtle px-2">
+                                                {{ npc.especializacion }}
+                                            </span>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# SECCIÓN TIENDAS#}
+                {% if npc.ofertaComercials is not empty %}
+                    <div class="mt-4 pt-3 border-top">
+                        <h4 class="h6 fw-bold text-secondary mb-2">
+                            <i class="fa-solid fa-coins text-warning me-1"></i> Interacciones Disponibles
+                        </h4>
+                        <p class="text-muted small mb-3">Este personaje ejerce funciones de mercader y tiene un catálogo activo de objetos.</p>
+                        
+                        <a href="#" class="btn btn-warning btn-sm fw-bold text-dark w-100 py-2 shadow-sm border border-warning-subtle">
+                            <i class="fa-solid fa-shop me-1"></i> Visitar la Tienda de {{ npc.nombre }}
+                        </a>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-3">
+            <div class="card border-0 shadow-sm bg-white p-3 text-center h-100 d-flex flex-column justify-content-center align-items-center">
+                {% if npc.imagen %}
+                    <div class="rounded shadow-sm overflow-hidden border bg-light w-100">
+                        <img src="{{ asset(npc.imagen) }}" 
+                             alt="Retrato de {{ npc.nombre }}" 
+                             class="img-fluid d-block mx-auto" 
+                             style="max-height: 450px; object-fit: contain; width: 100%;">
+                    </div>
+                    <small class="text-muted mt-2 italic" style="font-size: 0.75rem;">Ilustración del personaje</small>
+                {% else %}
+                    <div class="p-4 bg-light rounded text-center border border-dashed w-100 h-100 d-flex flex-column justify-content-center align-items-center text-muted">
+                        <i class="fa-solid fa-image display-4 mb-2 text-secondary-subtle"></i>
+                        <p class="small mb-0 px-2">No se dispone de un retrato a cuerpo completo para este personaje en los archivos.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

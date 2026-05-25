@@ -7,7 +7,9 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Entity\Jugadores;
+use App\Entity\Usuarios;
 
 class JugadoresAdmin extends AbstractAdmin
 {
@@ -81,6 +83,13 @@ class JugadoresAdmin extends AbstractAdmin
                 ->add('especialidad', TextType::class, [
                     'label' => 'Especialidad (Ej: DM, Diseñador, Tanque)',
                     'required' => false
+                ])
+                ->add('usuario', EntityType::class, [ 
+                    'class' => Usuarios::class,
+                    'choice_label' => 'nombreUsuario', 
+                    'label' => 'Cuenta de Usuario Vinculada',
+                    'placeholder' => 'Selecciona la cuenta de inicio de sesión...',
+                    'required' => false, 
                 ])
             ->end();
     }

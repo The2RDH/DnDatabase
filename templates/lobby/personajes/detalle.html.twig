@@ -1,0 +1,259 @@
+{% extends 'compartido/ficha_maestra.html.twig' %}
+
+{% block title %}Ficha de {{ personaje.nombre }} - Universo RPG{% endblock %}
+
+{% block boton_volver %}
+    <a href="{{ path('app_lobby_personajes') }}" class="btn btn-link link-secondary p-0 text-decoration-none">
+        <i class="fa-solid fa-arrow-left"></i> Volver al listado de personajes
+    </a>
+{% endblock %}
+
+{% block titulo_ficha %}{{ personaje.nombreCompleto }} {{ personaje.apellido }}{% endblock %}
+{% block subtitulo_ficha %}
+    {{ personaje.raza ? personaje.raza : 'Sin Raza' }} {{ personaje.clase ? personaje.clase : 'Sin Clase' }} — Nivel {{ personaje.nivel ?? 1 }}
+{% endblock %}
+
+{% block bloque_principal %}
+    <h4 class="mb-4 text-dark fw-bold"><i class="fa-solid fa-shield-halved text-primary"></i> Atributos y Estadísticas</h4>
+    
+    {% if personaje.estadisticas %}
+        
+        {# ATRIBUTOS #}
+        <h5 class="text-secondary fw-semibold mb-3"><i class="fa-solid fa-wand-magic-sparkles text-info small"></i> Atributos</h5>
+        <div class="card border-0 bg-light p-3 shadow-sm mb-5">
+            <div class="row g-2">
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted">Vida Máxima:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.vida ?? 100 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted">
+                        {{ personaje.estadisticas.recurso ? personaje.estadisticas.recurso.nombre : 'Recurso Principal' }}:
+                    </span>
+                    <strong class="text-dark">{{ personaje.estadisticas.cantidadRecurso ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted">
+                        {{ personaje.estadisticas.recursoSecundario ? personaje.estadisticas.recursoSecundario.nombre : 'Recurso Secundario' }}:
+                    </span>
+                    <strong class="text-dark">{{ personaje.estadisticas.cantidadRecursoSecundario ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted">Iniciativa:</span>
+                    <strong class="text-dark">+{{ personaje.estadisticas.iniciativa ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted">Armadura:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.armadura ?? 10 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted">Velocidad:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.movimiento ?? '5' }} M</strong>
+                </div>
+            </div>
+        </div>
+
+        {# ESTADISTICAS PRINCIPALES #}
+        <h5 class="text-secondary fw-semibold mb-3"><i class="fa-solid fa-star text-warning small"></i> Estadisticas Principales</h5>
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-6 g-3 mb-5">
+            <div class="col">
+                <div class="card bg-light border-0 text-center p-3 shadow-sm">
+                    <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Fuerza</small>
+                    <span class="fs-3 fw-bold text-dark mt-1">{{ personaje.estadisticas.fuerza ?? 10 }}</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card bg-light border-0 text-center p-3 shadow-sm">
+                    <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Destreza</small>
+                    <span class="fs-3 fw-bold text-dark mt-1">{{ personaje.estadisticas.destreza ?? 10 }}</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card bg-light border-0 text-center p-3 shadow-sm">
+                    <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Constitución</small>
+                    <span class="fs-3 fw-bold text-dark mt-1">{{ personaje.estadisticas.constitucion ?? 10 }}</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card bg-light border-0 text-center p-3 shadow-sm">
+                    <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Inteligencia</small>
+                    <span class="fs-3 fw-bold text-dark mt-1">{{ personaje.estadisticas.inteligencia ?? 10 }}</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card bg-light border-0 text-center p-3 shadow-sm">
+                    <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Sabiduría</small>
+                    <span class="fs-3 fw-bold text-dark mt-1">{{ personaje.estadisticas.sabiduria ?? 10 }}</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card bg-light border-0 text-center p-3 shadow-sm">
+                    <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Carisma</small>
+                    <span class="fs-3 fw-bold text-dark mt-1">{{ personaje.estadisticas.carisma ?? 10 }}</span>
+                </div>
+            </div>
+        </div>
+
+        {# ESTADISTICAS SECUNDARIAS #}
+        <h5 class="text-secondary fw-semibold mb-3"><i class="fa-solid fa-wand-magic-sparkles text-info small"></i> Estadísticas Secundarias</h5>
+        <div class="card border-0 bg-light p-3 shadow-sm mb-5">
+            <div class="row g-2"> 
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-person-running text-secondary me-1 small"></i> Acrobacias:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.acrobacias ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-paw text-secondary me-1 small"></i> Animalismo:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.animalismo ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-dumbbell text-secondary me-1 small"></i> Atletismo:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.atletismo ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-fire text-secondary me-1 small"></i> Caos:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.caos ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-hat-wizard text-secondary me-1 small"></i> Con. Mágico:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.conocimientoMagico ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-mask text-secondary me-1 small"></i> Engaño:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.enganio ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-church text-secondary me-1 small"></i> Religión:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.religion ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-monument text-secondary me-1 small"></i> Historia:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.historia ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-guitar text-secondary me-1 small"></i> Interpretación:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.interpretacion ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-skull text-secondary me-1 small"></i> Intimidación:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.intimidacion ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-magnifying-glass text-secondary me-1 small"></i> Investigación:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.investigacion ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-hands text-secondary me-1 small"></i> Juego de Manos:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.juegoManos ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-kit-medical text-secondary me-1 small"></i> Medicina:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.medicina ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-tree text-secondary me-1 small"></i> Naturaleza:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.naturaleza ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-scale-balanced text-secondary me-1 small"></i> Orden:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.orden ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-eye text-secondary me-1 small"></i> Percepción:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.percepcion ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-brain text-secondary me-1 small"></i> Perspicacia:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.perspicaciaint ?? personaje.estadisticas.perspicacia ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-comments text-secondary me-1 small"></i> Persuasión:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.persuasion ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-user-secret text-secondary me-1 small"></i> Sigilo:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.sigilo ?? 0 }}</strong>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-between border-bottom pb-2 px-3">
+                    <span class="text-muted"><i class="fa-solid fa-compass text-secondary me-1 small"></i> Supervivencia:</span>
+                    <strong class="text-dark">{{ personaje.estadisticas.supervivencia ?? 0 }}</strong>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <div class="alert alert-warning mb-5 border-0 shadow-sm">
+            <i class="fa-solid fa-circle-exclamation me-2"></i> Este personaje no tiene una matriz de estadísticas generada.
+        </div>
+    {% endif %}
+
+
+    <h4 class="mt-5 mb-3 text-dark fw-bold"><i class="fa-solid fa-bag-shopping text-success"></i> Inventario de Objetos</h4>
+    
+    {% if personaje.inventarios is not empty %}
+        <div class="table-responsive card border-0 shadow-sm">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Artículo / Objeto</th>
+                        <th class="text-center" style="width: 120px;">Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in personaje.inventarios %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fa-solid fa-shield-cat text-secondary"></i>
+                                    <span class="fw-medium text-dark">
+                                        {{ item.objeto ? item.objeto.nombre : 'Objeto Desconocido' }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-secondary-subtle text-secondary px-3 py-2 border">
+                                    x{{ item.cantidad ?? 1 }}
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-muted bg-light p-4 rounded border border-dashed text-center">
+            <i class="fa-solid fa-box-open d-block fs-3 mb-2 text-muted"></i>
+            El inventario de este aventurero está completamente vacío.
+        </p>
+    {% endif %}
+{% endblock %}
+
+
+{% block bloque_lateral %}
+    {% if personaje.imagen %}
+        <div class="text-center mb-4">
+            <img src="{{ personaje.imagen }}" alt="{{ personaje.nombre }}" class="img-fluid rounded shadow-sm border" style="max-height: 250px; object-fit: cover;">
+        </div>
+    {% endif %}
+
+    <h5 class="border-bottom pb-2 mb-3 text-dark fw-bold"><i class="fa-solid fa-dna text-info"></i> Rasgos Físicos</h5>
+    <ul class="list-unstyled mb-4 lh-lg">
+        <li><strong>Edad:</strong> <span class="text-muted">{{ personaje.edad ?? 'Desconocida' }}</span></li>
+        <li><strong>Altura:</strong> <span class="text-muted">{{ personaje.altura ?? 'Desconocida' }}</span></li>
+        <li><strong>Peso:</strong> <span class="text-muted">{{ personaje.peso ?? 'Desconocido' }}</span></li>
+    </ul>
+
+    <h5 class="border-bottom pb-2 mb-3 text-dark fw-bold"><i class="fa-solid fa-gavel text-danger"></i> Otros Datos</h5>
+    <ul class="list-unstyled mb-0">
+        <li class="mb-2"><strong>Alineamiento:</strong> <span class="badge bg-dark">{{ personaje.alineamiento ? personaje.alineamiento : 'Neutral' }}</span></li>
+        <li><strong>Procedencia:</strong> <span class="text-muted">{{ personaje.originario ?? 'Desconocida' }}</span></li>
+        <li><strong>Idiomas conocidos:</strong></li>
+        <div class="d-flex flex-wrap gap-1 mt-1">
+            {% for idioma in personaje.idiomas %}
+                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">{{ idioma.nombre }}</span>
+            {% else %}
+                <span class="text-muted small">Ninguno registrado</span>
+            {% endfor %}
+        </div>
+    </ul>
+{% endblock %}

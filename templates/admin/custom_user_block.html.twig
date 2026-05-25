@@ -1,0 +1,26 @@
+{# templates/admin/custom_user_block.html.twig #}
+{% if app.user %}
+    <div class="navbar-custom-menu" style="float: right; padding-right: 15px;">
+        <ul class="nav navbar-nav" style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
+            
+            <li class="user-footer">
+                <a href="{{ path('app_lobby') }}" class="btn btn-default btn-flat bg-green" style="color: #fff !important; border: 0;">
+                    Ir al Lobby
+                </a>
+            </li>
+
+            <li class="dropdown user user-menu" style="padding: 0 10px;">
+                <span class="hidden-xs" style="color: #fff; font-weight: 600;">
+                    {{ app.user.userIdentifier }}
+                </span>
+            </li>
+
+            <li class="user-footer">
+                <a href="{{ path('app_logout') }}" class="btn btn-default btn-flat bg-red" style="color: #fff !important; border: 0;">
+                    Salir
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+{% endif %}

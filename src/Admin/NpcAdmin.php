@@ -16,6 +16,7 @@ use App\Entity\Clases;
 use App\Entity\Especializacion;
 use App\Entity\Estado;
 use App\Entity\Estadisticas;
+use App\Entity\Lugares; 
 
 class NpcAdmin extends AbstractAdmin
 {
@@ -35,35 +36,34 @@ class NpcAdmin extends AbstractAdmin
             ])
             ->add('nivel', null, [
                 'label' => 'Nivel',
-                'header_style' => 'text-align: center; width: 80px;',
+                'header_style' => 'text-align: center; width: 60px;',
                 'row_align' => 'center'
             ])
             ->add('raza', null, [
                 'label' => 'Raza',
-                'header_style' => 'width: 15%;'
+                'header_style' => 'width: 12%;'
             ])
             ->add('clase', null, [
                 'label' => 'Clase',
-                'header_style' => 'width: 15%;'
-            ])
-            ->add('especializacion', null, [
-                'label' => 'Especialización',
-                'header_style' => 'width: 15%;'
+                'header_style' => 'width: 12%;'
             ])
             ->add('estado', null, [
                 'label' => 'Estado',
                 'header_style' => 'width: 10%;'
             ])
+            ->add('lugar', null, [
+                'label' => 'Ubicación Actual',
+                'header_style' => 'width: 15%;'
+            ])
             ->add('estadisticas', null, [
-                'label' => 'ID Estadísticas',
+                'label' => 'ID Stats',
                 'row_align' => 'center',
-                'header_style' => 'text-align: center; width: 110px;',
+                'header_style' => 'text-align: center; width: 90px;',
                 'associated_property' => 'id', 
                 'route' => [
                     'name' => 'edit'
                 ],
             ])
-
             ->add('descubierto', 'boolean', [
                 'label' => 'Descubierto',
                 'header_style' => 'text-align: center; width: 100px;',
@@ -72,7 +72,7 @@ class NpcAdmin extends AbstractAdmin
             ])
             ->add('_action', 'actions', [
                 'label' => 'Acciones',
-                'header_style' => 'text-align: center; width: 15%;',
+                'header_style' => 'text-align: center; width: 12%;',
                 'actions' => [
                     'edit' => [],
                     'delete' => [],
@@ -88,6 +88,8 @@ class NpcAdmin extends AbstractAdmin
             ->add('raza', null, ['label' => 'Raza'])
             ->add('clase', null, ['label' => 'Clase'])
             ->add('estado', null, ['label' => 'Estado'])
+            // 2. AÑADIDO A LOS FILTROS LATERALES/SUPERIORES DE BÚSQUEDA
+            ->add('lugar', null, ['label' => 'Ubicación Actual'])
             ->add('descubierto', null, ['label' => 'Descubierto']);
     }
 
@@ -170,6 +172,15 @@ class NpcAdmin extends AbstractAdmin
                     'label' => 'Estado actual',
                     'placeholder' => 'Selecciona el estado actual',
                     'required' => false
+                ])
+                // 3. AÑADIDO AL FORMULARIO DE CREACIÓN/EDICIÓN
+                ->add('lugar', EntityType::class, [
+                    'class' => Lugares::class,
+                    'choice_label' => 'nombre', // O el campo que uses en Lugares para mostrar su nombre (ej: 'titulo')
+                    'label' => 'Ubicación / Región actual',
+                    'placeholder' => 'Selecciona dónde se encuentra...',
+                    'required' => false,
+                    'attr' => ['class' => 'select2']
                 ])
                 ->add('descubierto', CheckboxType::class, [
                     'label' => '¿Ha sido descubierto por los jugadores?',

@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Códice de NPCs Descubiertos - Universo RPG{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+
+    <div class="d-flex align-items-center gap-3 mb-5 border-bottom pb-3">
+        <div class="p-3 bg-success-subtle text-success rounded-circle fs-3">
+            <i class="fa-solid fa-user-astronaut"></i>
+        </div>
+        <div>
+            <h1 class="h3 fw-bold text-dark mb-1">Códex recopilatorio de aventuras (Personajes conocidos)</h1>
+            <p class="text-muted small mb-0">Aliados, mentores y habitantes del mundo conocidos por el grupo durante vuestras aventuras.</p>
+        </div>
+    </div>
+
+    {% if npcs is not empty %}
+        <!-- CUADRÍCULA DE TOKENS: 2 en móvil, 4 en tablet, 6 en PC, 10 en pantallas extra grandes -->
+        <div class="row row-cols-2 row-cols-sm-4 row-cols-md-6 row-cols-xl-10 g-4 justify-content-center">
+            {% for npc in npcs %}
+                <div class="col text-center">
+                    <a href="{{ path('app_lobby_npc_detalle', {'id': npc.id}) }}" class="text-decoration-none group-token d-block">
+                        
+                        <!-- Contenedor del Token Circular con Efecto de Enfoque -->
+                        <div class="position-relative d-inline-block rounded-circle p-1 bg-white shadow-sm border border-secondary-subtle token-frame" style="transition: all 0.2s ease-in-out;">
+                            <img src="{{ npc.token ? asset(npc.token) : asset('img/default.png') }}" 
+                            alt="{{ npc.nombre }}" 
+                            class="rounded-circle" 
+                            style="width: 85px; height: 85px; object-fit: cover; display: block;">
+                            
+                            <!-- Indicador de Estado de salud -->
+                            {% if npc.estado %}
+                                <span class="position-absolute bottom-0 end-0 badge rounded-pill {% if npc.estado|lower == 'vivo' %}bg-success{% elseif npc.estado|lower == 'fallecido' %}bg-danger{% else %}bg-secondary{% endif %}" style="font-size: 0.65rem;">
+                                    {{ npc.estado }}
+                                </span>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Nombre del NPC -->
+                        <div class="fw-bold text-dark small mt-2 text-truncate px-1" title="{{ npc.nombre }}">
+                            {{ npc.nombre }}
+                        </div>
+                        
+                        <!-- Clase y raza -->
+                        <small class="text-muted d-block" style="font-size: 0.75rem;">
+                            {{ npc.clase ? npc.clase : 'Sin Clase' }} {{ npc.raza ? npc.raza : 'Raza desconocida'}}
+                        </small>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- Mensaje de Códice Vacío -->
+        <div class="text-center p-5 bg-white rounded shadow-sm border border-dashed my-5">
+            <i class="fa-solid fa-cloud d-block display-3 text-muted-subtle mb-3"></i>
+            <h4 class="fw-bold text-dark">La niebla de guerra oculta las tierras</h4>
+            <p class="text-muted small">Vuestro grupo de juego todavía no ha entablado conversación ni descubierto a ningún personaje relevante en el códex recopilatorio de aventuras.</p>
+        </div>
+    {% endif %}
+
+</div>
+
+<style>
+    .group-token:hover .token-frame {
+        transform: scale(1.1) translateY(-4px);
+        border-color: #198754 !important; 
+        shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+    }
+</style>
+{% endblock %}

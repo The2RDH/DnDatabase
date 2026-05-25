@@ -22,6 +22,11 @@ class Inventario
     #[ORM\ManyToOne(inversedBy: 'inventarios')]
     private ?Personaje $personaje = null;
 
+    public function __toString(): string
+    {
+        return $this->nombre ?? 'Sin establecer';
+    }
+    
     public function getId(): ?int
     {
         return $this->id;

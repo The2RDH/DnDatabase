@@ -33,8 +33,21 @@ class Lugares
     #[ORM\ManyToOne(inversedBy: 'lugares')]
     private ?Terrenos $terreno = null;
 
+    /**
+     * @var Collection<int, Npc>
+     */
+    #[ORM\OneToMany(targetEntity: Npc::class, mappedBy: 'lugar')]
+    private Collection $npcs;
+
+    
+    public function __toString(): string
+    {
+        return $this->nombre ?? 'Sin establecer';
+    }
+
     public function __construct()
     {
+        $this->npcs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -110,6 +123,36 @@ class Lugares
     public function setTerreno(?Terrenos $terreno): static
     {
         $this->terreno = $terreno;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Npc>
+     */
+    public function getNpcs(): Collection
+    {
+        return $this->npcs;
+    }
+
+    public function addNpc(Npc $npc): static
+    {
+        if (!$this->npcs->contains($npc)) {
+            $this->npcs->add($npc);
+            $npc->setLugar($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNpc(Npc $npc): static
+    {
+        if ($this->npcs->removeElement($npc)) {
+            // set the owning side to null (unless already changed)
+            if ($npc->getLugar() === $this) {
+                $npc->setLugar(null);
+            }
+        }
 
         return $this;
     }

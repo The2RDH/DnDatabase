@@ -57,6 +57,9 @@ class Npc
     #[ORM\OneToMany(targetEntity: OfertaComercial::class, mappedBy: 'npc')]
     private Collection $ofertaComercials;
 
+    #[ORM\ManyToOne(inversedBy: 'npcs')]
+    private ?Lugares $lugar = null;
+
     public function __toString(): string
     {
         return $this->nombre ?? 'Sin establecer';
@@ -242,6 +245,18 @@ class Npc
                 $ofertaComercial->setNpc(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLugar(): ?Lugares
+    {
+        return $this->lugar;
+    }
+
+    public function setLugar(?Lugares $lugar): static
+    {
+        $this->lugar = $lugar;
 
         return $this;
     }

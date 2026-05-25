@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sin Personaje - Universo RPG{% endblock %}
+
+{% block body %}
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+    <div class="text-center p-5 bg-white rounded shadow-sm border" style="max-width: 600px; border-style: dashed !important;">
+        
+        <div class="display-1 text-muted mb-4">
+            <i class="fa-solid fa-user-slash text-secondary-subtle"></i>
+        </div>
+        
+        <h1 class="fw-bold text-dark h3 mb-2">Aún no tienes un personaje asignado</h1>
+        <p class="lead text-muted fs-6 mb-4">
+            ¡Bienvenido a la comunidad, aventurero! Tu cuenta de usuario está registrada correctamente, pero tu hoja de personaje todavía no ha sido vinculada en el gran códice del backend.
+        </p>
+        
+        <div class="bg-light p-3 rounded text-start mb-4 border">
+            <h6 class="fw-bold text-secondary mb-2">
+                <i class="fa-solid fa-circle-info text-info me-1"></i> ¿Qué debes hacer ahora?
+            </h6>
+            <ul class="small text-secondary mb-0 ps-3 lh-lg">
+                <li>Ponte en contacto con el <strong>Director de Juego (DM)</strong> o el administrador de la plataforma.</li>
+                <li>En cuanto el administrador asigne tu personaje en el panel de control, tu ficha, estadísticas e inventario aparecerán aquí.</li>
+            </ul>
+        </div>
+
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a href="{{ path('app_lobby') }}" class="btn btn-primary px-4 gap-3">
+                <i class="fa-solid fa-house me-1"></i> Volver al Inicio
+            </a>
+            <a href="{{ path('app_lobby_personajes') }}" class="btn btn-outline-secondary px-4">
+                <i class="fa-solid fa-users me-1"></i> Ver otros personajes
+            </a>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

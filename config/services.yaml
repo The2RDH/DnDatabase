@@ -1,5 +1,7 @@
 parameters:
     locale: 'es'
+    images_directory: '%kernel.project_dir%/public/media/images'
+    tokens_directory: '%kernel.project_dir%/public/media/tokens'
 
 services:
     _defaults:

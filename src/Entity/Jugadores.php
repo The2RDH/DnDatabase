@@ -33,6 +33,9 @@ class Jugadores
     #[ORM\OneToMany(targetEntity: Personaje::class, mappedBy: 'jugador')]
     private Collection $personajes;
 
+    #[ORM\OneToOne(inversedBy: 'jugadores', cascade: ['persist', 'remove'])]
+    private ?Usuarios $usuario = null;
+
 
     public function __construct()
     {
@@ -131,5 +134,17 @@ class Jugadores
             return $this->nombre;
         }
         return 'Sin jugador';
+    }
+
+    public function getUsuario(): ?Usuarios
+    {
+        return $this->usuario;
+    }
+
+    public function setUsuario(?Usuarios $usuario): static
+    {
+        $this->usuario = $usuario;
+
+        return $this;
     }
 }
