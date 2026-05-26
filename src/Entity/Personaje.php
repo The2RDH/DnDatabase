@@ -78,6 +78,18 @@ class Personaje
     #[ORM\ManyToMany(targetEntity: Lore::class, mappedBy: 'personaje')]
     private Collection $lores;
 
+    /**
+     * @var Collection<int, Jefes>
+     */
+    #[ORM\OneToMany(targetEntity: Jefes::class, mappedBy: 'golpeGracia')]
+    private Collection $jefes;
+
+    #[ORM\ManyToOne(inversedBy: 'personajes')]
+    private ?Especializacion $especializacion = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $oro = null;
+
     public function __toString(): string
     {
         return $this->nombre ?? 'Personaje sin nombre';
@@ -88,6 +100,7 @@ class Personaje
         $this->idiomas = new ArrayCollection();
         $this->inventarios = new ArrayCollection();
         $this->lores = new ArrayCollection();
+        $this->jefes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -367,6 +380,60 @@ class Personaje
         if ($this->lores->removeElement($lore)) {
             $lore->removePersonaje($this);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Jefes>
+     */
+    public function getJefes(): Collection
+    {
+        return $this->jefes;
+    }
+
+    public function addJefe(Jefes $jefe): static
+    {
+        if (!$this->jefes->contains($jefe)) {
+            $this->jefes->add($jefe);
+            $jefe->setGolpeGracia($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJefe(Jefes $jefe): static
+    {
+        if ($this->jefes->removeElement($jefe)) {
+            // set the owning side to null (unless already changed)
+            if ($jefe->getGolpeGracia() === $this) {
+                $jefe->setGolpeGracia(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getEspecializacion(): ?Especializacion
+    {
+        return $this->especializacion;
+    }
+
+    public function setEspecializacion(?Especializacion $especializacion): static
+    {
+        $this->especializacion = $especializacion;
+
+        return $this;
+    }
+
+    public function getOro(): ?int
+    {
+        return $this->oro;
+    }
+
+    public function setOro(?int $oro): static
+    {
+        $this->oro = $oro;
 
         return $this;
     }

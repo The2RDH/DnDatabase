@@ -8,7 +8,29 @@
     </a>
 {% endblock %}
 
-{% block titulo_ficha %}{{ personaje.nombreCompleto }} {{ personaje.apellido }}{% endblock %}
+{% block titulo_ficha %}
+    <div class="d-flex align-items-center gap-3">
+        {% if personaje.token is defined and personaje.token is not empty %}
+            <img src="{{ asset('media/tokens/' ~ personaje.token) }}" alt="Token {{ personaje.nombre }}" 
+                 class="rounded-circle border border-warning border-3 shadow-sm flex-shrink-0" 
+                 style="width: 150px; height: 150px; object-fit: cover; background-color: #fff;">
+        {% elseif personaje.clase is not null and personaje.clase.token is not empty %}
+            <img src="{{ asset('media/class/' ~ personaje.clase.token) }}" alt="Token de Clase" 
+                 class="rounded-circle border border-warning border-3 shadow-sm flex-shrink-0" 
+                 style="width: 75px; height: 75px; object-fit: cover; background-color: #fff;">
+        {% else %}
+            <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center border border-warning border-3 shadow-sm flex-shrink-0" 
+                 style="width: 75px; height: 75px; font-size: 1.5rem;">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+        {% endif %}
+
+        <div>
+            {{ personaje.nombreCompleto }} {{ personaje.apellido }}
+        </div>
+    </div>
+{% endblock %}
+
 {% block subtitulo_ficha %}
     {{ personaje.raza ? personaje.raza : 'Sin Raza' }} {{ personaje.clase ? personaje.clase : 'Sin Clase' }} — Nivel {{ personaje.nivel ?? 1 }}
 {% endblock %}

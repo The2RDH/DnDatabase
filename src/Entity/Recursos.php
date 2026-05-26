@@ -39,8 +39,8 @@ class Recursos
     /**
      * @var Collection<int, Especializacion>
      */
-    #[ORM\OneToMany(targetEntity: Especializacion::class, mappedBy: 'recurso', orphanRemoval: true)]
-    private Collection $especializacions;
+    #[ORM\ManyToMany(targetEntity: Especializacion::class, mappedBy: 'recursos')]
+    private Collection $especializaciones;
 
     public function __toString(): string
     {
@@ -51,7 +51,7 @@ class Recursos
     {
         $this->clases = new ArrayCollection();
         $this->estadisticas = new ArrayCollection();
-        $this->especializacions = new ArrayCollection();
+        $this->especializaciones = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -158,16 +158,16 @@ class Recursos
     /**
      * @return Collection<int, Especializacion>
      */
-    public function getEspecializacions(): Collection
+    public function getEspecializaciones(): Collection
     {
-        return $this->especializacions;
+        return $this->especializaciones;
     }
 
     public function addEspecializacion(Especializacion $especializacion): static
     {
-        if (!$this->especializacions->contains($especializacion)) {
-            $this->especializacions->add($especializacion);
-            $especializacion->setRecurso($this);
+        if (!$this->especializaciones->contains($especializacion)) {
+            $this->especializaciones->add($especializacion);
+            $especializacion->addRecurso($this); 
         }
 
         return $this;
@@ -175,11 +175,8 @@ class Recursos
 
     public function removeEspecializacion(Especializacion $especializacion): static
     {
-        if ($this->especializacions->removeElement($especializacion)) {
-            // set the owning side to null (unless already changed)
-            if ($especializacion->getRecurso() === $this) {
-                $especializacion->setRecurso(null);
-            }
+        if ($this->especializaciones->removeElement($especializacion)) {
+            $especializacion->removeRecurso($this); 
         }
 
         return $this;

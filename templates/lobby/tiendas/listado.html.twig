@@ -1,0 +1,152 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}El Gran Bazar{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    
+    <div class="mb-5 text-center">
+        <h1 class="display-5 fw-bold text-dark"><i class="fa-solid fa-shop text-warning"></i> Registro de Mercaderes y Tiendas conocidas</h1>
+        <p class="text-muted lead">Consulta los suministros, armas y tesoros disponibles con los mercaderes descubiertos.</p>
+        <hr class="w-25 mx-auto border-warning border-2">
+    </div>
+
+    {% if comerciantes is empty %}
+        <div class="alert alert-info border-info-subtle text-center py-5 shadow-sm" role="alert">
+            <i class="fa-solid fa-store-slash display-4 mb-3 d-block text-secondary"></i>
+            <h4 class="alert-heading fw-bold">Mercado en Calma</h4>
+            <p class="mb-0 text-muted">No conoces a ningún comerciante activo en esta región todavía. ¡Sigue explorando!</p>
+        </div>
+    {% else %}
+        
+        {% for comerciante in comerciantes %}
+            <div class="card border-0 shadow-sm bg-white mb-3 overflow-hidden" id="comerciante-{{ comerciante.id }}">
+                
+                <div class="card-header bg-dark p-3 border-0 d-flex flex-wrap align-items-center justify-content-between gap-3 user-select-none" 
+                     data-bs-toggle="collapse" 
+                     data-bs-target="#collapse-tienda-{{ comerciante.id }}" 
+                     aria-expanded="false" 
+                     aria-controls="collapse-tienda-{{ comerciante.id }}"
+                     style="cursor: pointer;">
+                    
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rounded-circle bg-light p-0.5 border" style="width: 50px; height: 50px;">
+                            <img src="{{ comerciante.token ? asset(comerciante.token) : asset('img/default_token.png') }}" 
+                                 alt="{{ comerciante.nombre }}" 
+                                 class="rounded-circle w-100 h-100" 
+                                 style="object-fit: cover;">
+                        </div>
+                        <div>
+                            <h2 class="h5 fw-bold text-white mb-0">
+                                {{ comerciante.nombre }}
+                            </h2>
+                            <span class="badge bg-warning text-dark fw-bold px-2 py-0.5 mt-1" style="font-size: 0.75rem;">
+                                <i class="fa-solid fa-tags me-1"></i> {{ comerciante.tiendaDescripcion ?? 'Suministros Generales' }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center gap-3">
+                        {% if comerciante.lugar %}
+                            <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle py-1.5 px-3 d-none d-sm-inline-block">
+                                <i class="fa-solid fa-map-pin text-danger me-1"></i> {{ comerciante.lugar }}
+                            </span>
+                        {% endif %}
+                        <div class="text-white opacity-75 pe-2">
+                            <i class="fa-solid fa-chevron-down transition-arrow"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="collapse-tienda-{{ comerciante.id }}" class="collapse">
+                    
+                    <div class="bg-light-subtle px-4 py-2 border-bottom d-flex justify-content-between align-items-center bg-light">
+                        <small class="text-muted">¿Quieres saber más sobre este personaje?</small>
+                        <a href="{{ path('app_lobby_npc_detalle', {'id': comerciante.id}) }}" class="btn btn-xs btn-outline-secondary py-1 px-2 fw-bold" style="font-size: 0.75rem;">
+                            <i class="fa-solid fa-address-card me-1"></i> Ver Perfil Completo
+                        </a>
+                    </div>
+
+                    <div class="card-body p-0">
+                        {% if comerciante.ofertaComercials is empty %}
+                            <div class="p-4 text-center text-muted">
+                                <i class="fa-solid fa-boxes-empty mb-2 fs-4 d-block text-black-50"></i>
+                                <small class="italic">Este mercader se ha quedado sin mercancía por ahora.</small>
+                            </div>
+                        {% else %}
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0 text-dark">
+                                    <thead class="table-light text-secondary uppercase fs-7 fw-bold">
+                                        <tr>
+                                            <th scope="col" class="ps-4" style="width: 50%;">Artículo</th>
+                                            <th scope="col" style="width: 25%;">Categoría y Rareza</th>
+                                            <th scope="col" class="text-center" style="width: 10%;">Stock</th>
+                                            <th scope="col" class="text-end pe-4" style="width: 15%;">Precio</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for oferta in comerciante.ofertaComercials %}
+                                            <tr>
+                                                <td class="ps-4">
+                                                    <div>
+                                                        <strong class="d-block text-dark-emphasis">{{ oferta.objeto ? oferta.objeto.nombre : 'Artículo Desconocido' }}</strong>
+                                                        {% if oferta.objeto and oferta.objeto.descripcion %}
+                                                            <small class="text-muted d-block text-truncate" style="max-width: 400px;">{{ oferta.objeto.descripcion }}</small>
+                                                        {% endif %}
+                                                    </div>
+                                                </td>
+                                                
+                                                <td>
+                                                    <span class="text-dark fw-medium small d-block">
+                                                        <i class="fa-solid fa-wand-magic-sparkles me-1 text-secondary opacity-75"></i>
+                                                        {{ oferta.objeto and oferta.objeto.tipoObjetos ? oferta.objeto.tipoObjetos.nombre : 'Miscelánea' }}
+                                                    </span>
+                                                    {% if oferta.objeto and oferta.objeto.rareza %}
+                                                        <small class="text-muted d-block mt-0.5" style="font-size: 0.75rem;">
+                                                            <i class="fa-solid fa-gem me-1 text-info opacity-75"></i> {{ oferta.objeto.rareza.nombre }}
+                                                        </small>
+                                                    {% endif %}
+                                                </td>
+                                                
+                                                <td class="text-center">
+                                                    {% if oferta.cantidad > 0 %}
+                                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-2">
+                                                            {{ oferta.cantidad }} uds
+                                                        </span>
+                                                    {% else %}
+                                                        <span class="badge bg-secondary text-white-50 border px-2">
+                                                            ∞ (Ilimitado)
+                                                        </span>
+                                                    {% endif %}
+                                                </td>
+                                                
+                                                <td class="text-end pe-4">
+                                                    <span class="fw-bold text-dark fs-5">
+                                                        {{ oferta.precio|number_format(2, ',', '.') }}
+                                                    </span>
+                                                    <i class="fa-solid fa-coins text-warning ms-1" title="Monedas de Oro"></i>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<style>
+    [aria-expanded="true"] .transition-arrow {
+        transform: rotate(180deg);
+        transition: transform 0.2s ease-in-out;
+    }
+    .transition-arrow {
+        transition: transform 0.2s ease-in-out;
+    }
+</style>
+{% endblock %}

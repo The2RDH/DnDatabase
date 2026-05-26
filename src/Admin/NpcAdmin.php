@@ -55,14 +55,11 @@ class NpcAdmin extends AbstractAdmin
                 'label' => 'Ubicación Actual',
                 'header_style' => 'width: 15%;'
             ])
-            ->add('estadisticas', null, [
-                'label' => 'ID Stats',
-                'row_align' => 'center',
+            ->add('comerciante', 'boolean', [
+                'label' => 'Comerciante',
                 'header_style' => 'text-align: center; width: 90px;',
-                'associated_property' => 'id', 
-                'route' => [
-                    'name' => 'edit'
-                ],
+                'row_align' => 'center',
+                'editable' => true
             ])
             ->add('descubierto', 'boolean', [
                 'label' => 'Descubierto',
@@ -88,13 +85,15 @@ class NpcAdmin extends AbstractAdmin
             ->add('raza', null, ['label' => 'Raza'])
             ->add('clase', null, ['label' => 'Clase'])
             ->add('estado', null, ['label' => 'Estado'])
-            // 2. AÑADIDO A LOS FILTROS LATERALES/SUPERIORES DE BÚSQUEDA
             ->add('lugar', null, ['label' => 'Ubicación Actual'])
+            ->add('comerciante', null, ['label' => 'Es Comerciante'])
             ->add('descubierto', null, ['label' => 'Descubierto']);
     }
 
     protected function configureFormFields(FormMapper $form): void
     {
+        $uniqId = $this->getUniqid();
+
         $form
             ->with('Datos Básicos', ['class' => 'col-md-6'])
                 ->add('nombre', TextType::class, [
@@ -173,10 +172,9 @@ class NpcAdmin extends AbstractAdmin
                     'placeholder' => 'Selecciona el estado actual',
                     'required' => false
                 ])
-                // 3. AÑADIDO AL FORMULARIO DE CREACIÓN/EDICIÓN
                 ->add('lugar', EntityType::class, [
                     'class' => Lugares::class,
-                    'choice_label' => 'nombre', // O el campo que uses en Lugares para mostrar su nombre (ej: 'titulo')
+                    'choice_label' => 'nombre', 
                     'label' => 'Ubicación / Región actual',
                     'placeholder' => 'Selecciona dónde se encuentra...',
                     'required' => false,
@@ -186,6 +184,18 @@ class NpcAdmin extends AbstractAdmin
                     'label' => '¿Ha sido descubierto por los jugadores?',
                     'required' => false,
                     'help' => 'Si se marca, aparecerá visible en el códice o el diario de los jugadores.'
+                ])
+            ->end()
+            ->with('Perfil Comercial', ['class' => 'col-md-6'])
+                ->add('comerciante', CheckboxType::class, [
+                    'label' => '¿Es un NPC Comerciante / Tendero?',
+                    'required' => false,
+                    'attr' => ['class' => 'toggle-comerciante']
+                ])
+                ->add('tiendaDescripcion', TextType::class, [
+                    'label' => 'Descripción de tienda',
+                    'required' => false,
+                    'attr' => ['placeholder' => 'Ej: Suministros de Alquimia, Herrería de armas...'],
                 ])
             ->end();
     }

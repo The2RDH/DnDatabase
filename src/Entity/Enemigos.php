@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\EnemigosRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EnemigosRepository::class)]
@@ -55,11 +56,20 @@ class Enemigos
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nivel = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $descripcion = null;
 
     #[ORM\ManyToOne(inversedBy: 'enemigos')]
     private ?Estadisticas $estadisticas = null;
+
+    #[ORM\Column]
+    private ?bool $analizado = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $debilidades = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $fortalezas = null;
 
     public function __toString(): string
     {
@@ -259,6 +269,42 @@ class Enemigos
     public function setEstadisticas(?Estadisticas $estadisticas): static
     {
         $this->estadisticas = $estadisticas;
+
+        return $this;
+    }
+
+    public function isAnalizado(): ?bool
+    {
+        return $this->analizado;
+    }
+
+    public function setAnalizado(bool $analizado): static
+    {
+        $this->analizado = $analizado;
+
+        return $this;
+    }
+
+    public function getDebilidades(): ?string
+    {
+        return $this->debilidades;
+    }
+
+    public function setDebilidades(?string $debilidades): static
+    {
+        $this->debilidades = $debilidades;
+
+        return $this;
+    }
+
+    public function getFortalezas(): ?string
+    {
+        return $this->fortalezas;
+    }
+
+    public function setFortalezas(?string $fortalezas): static
+    {
+        $this->fortalezas = $fortalezas;
 
         return $this;
     }

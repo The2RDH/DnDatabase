@@ -136,7 +136,7 @@
                         </h4>
                         <p class="text-muted small mb-3">Este personaje ejerce funciones de mercader y tiene un catálogo activo de objetos.</p>
                         
-                        <a href="#" class="btn btn-warning btn-sm fw-bold text-dark w-100 py-2 shadow-sm border border-warning-subtle">
+                        <a href="{{ path('app_lobby_tiendas_detalle', {'id': npc.id}) }}" class="btn btn-warning btn-sm fw-bold text-dark w-100 py-2 shadow-sm border border-warning-subtle">
                             <i class="fa-solid fa-shop me-1"></i> Visitar la Tienda de {{ npc.nombre }}
                         </a>
                     </div>

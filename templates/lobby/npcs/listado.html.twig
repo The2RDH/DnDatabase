@@ -22,9 +22,9 @@
                 <div class="col text-center">
                     <a href="{{ path('app_lobby_npc_detalle', {'id': npc.id}) }}" class="text-decoration-none group-token d-block">
                         
-                        <!-- Contenedor del Token Circular con Efecto de Enfoque -->
+                        <!-- Contenedor del Token -->
                         <div class="position-relative d-inline-block rounded-circle p-1 bg-white shadow-sm border border-secondary-subtle token-frame" style="transition: all 0.2s ease-in-out;">
-                            <img src="{{ npc.token ? asset(npc.token) : asset('img/default.png') }}" 
+                            <img src="{{ npc.token ? asset(npc.token) : asset('media/tokens/default.png') }}" 
                             alt="{{ npc.nombre }}" 
                             class="rounded-circle" 
                             style="width: 85px; height: 85px; object-fit: cover; display: block;">

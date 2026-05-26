@@ -18,16 +18,16 @@ class Especializacion
     #[ORM\Column(length: 25)]
     private ?string $nombre = null;
 
-    #[ORM\ManyToOne(inversedBy: 'especializacions')]
+    #[ORM\ManyToOne(inversedBy: 'especializaciones')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Clases $clase = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $descripcion = null;
 
-    #[ORM\ManyToOne(inversedBy: 'especializacions')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Recursos $recurso = null;
+    #[ORM\ManyToMany(targetEntity: Recursos::class, inversedBy: 'especializaciones')]
+    #[ORM\JoinTable(name: 'especializacion_recurso')]
+    private Collection $recursos;
 
     /**
      * @var Collection<int, Npc>
@@ -47,11 +47,24 @@ class Especializacion
     #[ORM\OneToMany(targetEntity: Jefes::class, mappedBy: 'especializaci�on')]
     private Collection $jefes;
 
+    /**
+     * @var Collection<int, Personaje>
+     */
+    #[ORM\OneToMany(targetEntity: Personaje::class, mappedBy: 'especializacion')]
+    private Collection $personajes;
+
+    public function __toString(): string
+    {
+        return $this->nombre ?? 'Sin establecer';
+    }
+    
     public function __construct()
     {
         $this->npcs = new ArrayCollection();
         $this->enemigos = new ArrayCollection();
         $this->jefes = new ArrayCollection();
+        $this->recursos = new ArrayCollection();
+        $this->personajes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -95,14 +108,26 @@ class Especializacion
         return $this;
     }
 
-    public function getRecurso(): ?Recursos
+    /**
+     * @return Collection<int, Recursos>
+     */
+    public function getRecursos(): Collection
     {
-        return $this->recurso;
+        return $this->recursos;
     }
 
-    public function setRecurso(?Recursos $recurso): static
+    public function addRecurso(Recursos $recurso): static
     {
-        $this->recurso = $recurso;
+        if (!$this->recursos->contains($recurso)) {
+            $this->recursos->add($recurso);
+        }
+
+        return $this;
+    }
+
+    public function removeRecurso(Recursos $recurso): static
+    {
+        $this->recursos->removeElement($recurso);
 
         return $this;
     }
@@ -191,6 +216,36 @@ class Especializacion
             // set the owning side to null (unless already changed)
             if ($jefe->getEspecializacion() === $this) {
                 $jefe->setEspecializacion(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Personaje>
+     */
+    public function getPersonajes(): Collection
+    {
+        return $this->personajes;
+    }
+
+    public function addPersonaje(Personaje $personaje): static
+    {
+        if (!$this->personajes->contains($personaje)) {
+            $this->personajes->add($personaje);
+            $personaje->setEspecializacion($this);
+        }
+
+        return $this;
+    }
+
+    public function removePersonaje(Personaje $personaje): static
+    {
+        if ($this->personajes->removeElement($personaje)) {
+            // set the owning side to null (unless already changed)
+            if ($personaje->getEspecializacion() === $this) {
+                $personaje->setEspecializacion(null);
             }
         }
 

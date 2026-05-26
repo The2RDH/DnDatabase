@@ -1,0 +1,146 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bestiario{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+
+    <div class="mb-4 text-center">
+        <h1 class="display-5 fw-bold text-dark"><i class="fa-solid fa-dragon text-danger"></i> Bestiario y Enemigos</h1>
+        <p class="text-muted lead">Anales y registros de las criaturas, monstruos y amenazas avistadas por el grupo.</p>
+        <hr class="w-25 mx-auto border-danger border-2">
+    </div>
+
+    {% if porTipos is empty and porGrupos is empty %}
+        <div class="alert alert-secondary text-center py-5 shadow-sm" role="alert">
+            <i class="fa-solid fa-shield-halved display-4 mb-3 d-block text-secondary"></i>
+            <h4 class="alert-heading fw-bold">Tierras en Paz</h4>
+            <p class="mb-0 text-muted">No se ha registrado ninguna amenaza o criatura hostil en las crónicas todavía.</p>
+        </div>
+    {% else %}
+
+        <div class="d-flex justify-content-center mb-5">
+            <div class="btn-group p-1 bg-light rounded-pill shadow-sm border" role="group" aria-label="Organizar bestiario">
+                <button type="button" id="btn-vista-tipos" class="btn btn-danger rounded-pill px-4 fw-bold active transition-all">
+                    <i class="fa-solid fa-spaghetti-monster-flying me-1"></i> Por Especie / Tipo
+                </button>
+                <button type="button" id="btn-vista-grupos" class="btn btn-outline-secondary rounded-pill px-4 fw-bold border-0 transition-all text-dark">
+                    <i class="fa-solid fa-users-viewfinder me-1"></i> Por Facción / Grupo
+                </button>
+            </div>
+        </div>
+
+        <div id="contenedor-vista-tipos">
+            {% for tipo, listaEnemigos in porTipos %}
+                <div class="mb-5">
+                    <div class="d-flex align-items-center mb-4 pb-2 border-bottom border-danger-subtle">
+                        <h2 class="h4 fw-bold text-dark-emphasis mb-0 text-uppercase text-danger">
+                            <i class="fa-solid fa-skull-crossbones me-2 opacity-75"></i> {{ tipo }}
+                        </h2>
+                        <span class="badge bg-secondary-subtle text-secondary border ms-3 px-2 py-1 fw-bold" style="font-size: 0.75rem;">
+                            {{ listaEnemigos|length }} {{ listaEnemigos|length == 1 ? 'amenaza' : 'amenazas' }}
+                        </span>
+                    </div>
+
+                    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-4">
+                        {% for enemigo in listaEnemigos %}
+                            <div class="col text-center">
+                                <a href="{{ path('app_lobby_enemigo_detalle', {'id': enemigo.id}) }}" class="text-decoration-none group d-block text-dark">
+                                    <div class="mx-auto mb-2 token-container rounded-circle bg-white shadow-sm border border-2 border-secondary-subtle position-relative overflow-hidden p-0.5" style="width: 110px; height: 110px;">
+                                        <img src="{{ asset(enemigo.token|default('media/tokens/default.png')) }}" alt="{{ enemigo.nombre }}" class="rounded-circle w-100 h-100 token-img" style="object-fit: cover; transition: transform 0.3s ease;">
+                                    </div>
+                                    <span class="fw-bold d-block text-truncate px-1 name-link text-dark-emphasis" style="font-size: 0.95rem;">{{ enemigo.nombre }}</span>
+                                    {% if enemigo.nivel %}
+                                        <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.75rem;">PELIGRO: {{ enemigo.nivel }}</small>
+                                    {% endif %}
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div id="contenedor-vista-grupos" class="d-none">
+            {% for grupo, listaEnemigos in porGrupos %}
+                <div class="mb-5">
+                    <div class="d-flex align-items-center mb-4 pb-2 border-bottom border-warning-subtle">
+                        <h2 class="h4 fw-bold text-dark-emphasis mb-0 text-uppercase text-warning-custom">
+                            <i class="fa-solid fa-flag me-2 opacity-75"></i> {{ grupo }}
+                        </h2>
+                        <span class="badge bg-secondary-subtle text-secondary border ms-3 px-2 py-1 fw-bold" style="font-size: 0.75rem;">
+                            {{ listaEnemigos|length }} {{ listaEnemigos|length == 1 ? 'integrante' : 'integrantes' }}
+                        </span>
+                    </div>
+
+                    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-4">
+                        {% for enemigo in listaEnemigos %}
+                            <div class="col text-center">
+                                <a href="{{ path('app_lobby_enemigo_detalle', {'id': enemigo.id}) }}" class="text-decoration-none group d-block text-dark">
+                                    <div class="mx-auto mb-2 token-container rounded-circle bg-white shadow-sm border border-2 border-secondary-subtle position-relative overflow-hidden p-0.5" style="width: 110px; height: 110px;">
+                                        <img src="{{ asset(enemigo.token|default('media/tokens/default.png')) }}" alt="{{ enemigo.nombre }}" class="rounded-circle w-100 h-100 token-img" style="object-fit: cover; transition: transform 0.3s ease;">
+                                    </div>
+                                    <span class="fw-bold d-block text-truncate px-1 name-link text-dark-emphasis" style="font-size: 0.95rem;">{{ enemigo.nombre }}</span>
+                                    {% if enemigo.nivel %}
+                                        <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.75rem;">PELIGRO: {{ enemigo.nivel }}</small>
+                                    {% endif %}
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    {% endif %}
+</div>
+
+<style>
+    .text-warning-custom { color: #b27d14; }
+    .border-warning-subtle { border-color: #ffeeba !important; }
+    .token-container { transition: all 0.25s ease-in-out; }
+    
+    /* Efecto hover general de los tokens */
+    a.group:hover .token-container {
+        border-color: #dc3545 !important;
+        box-shadow: 0 .5rem 1rem rgba(220, 53, 69, 0.15) !important;
+        transform: translateY(-4px);
+    }
+    a.group:hover .token-img { transform: scale(1.08); }
+    a.group:hover .name-link { color: #dc3545 !important; }
+    .transition-all { transition: all 0.2s ease-in-out; }
+</style>
+
+{# SCRIPT PARA CAMBIO DE VISTA #}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const btnTipos = document.getElementById('btn-vista-tipos');
+        const btnGrupos = document.getElementById('btn-vista-grupos');
+        const vistaTipos = document.getElementById('contenedor-vista-tipos');
+        const vistaGrupos = document.getElementById('contenedor-vista-grupos');
+
+        if(btnTipos && btnGrupos) {
+            btnTipos.addEventListener('click', function() {
+                // Intercambio de clases Bootstrap para ocultar/mostrar secciones
+                vistaTipos.classList.remove('d-none');
+                vistaGrupos.classList.add('d-none');
+
+                // Ajuste visual de los botones activos
+                btnTipos.className = "btn btn-danger rounded-pill px-4 fw-bold active transition-all";
+                btnGrupos.className = "btn btn-outline-secondary rounded-pill px-4 fw-bold border-0 transition-all text-dark";
+            });
+
+            // Click en el botón de Grupos
+            btnGrupos.addEventListener('click', function() {
+                // Intercambio de clases Bootstrap
+                vistaGrupos.classList.remove('d-none');
+                vistaTipos.classList.add('d-none');
+
+                // Ajuste visual de los botones activos (Cambiamos rojo de peligro por un amarillo/ocre para Facciones)
+                btnGrupos.className = "btn btn-warning rounded-pill px-4 fw-bold active transition-all text-dark";
+                btnTipos.className = "btn btn-outline-secondary rounded-pill px-4 fw-bold border-0 transition-all text-dark";
+            });
+        }
+    });
+</script>
+{% endblock %}

@@ -35,7 +35,7 @@ class Clases
      * @var Collection<int, Especializacion>
      */
     #[ORM\OneToMany(targetEntity: Especializacion::class, mappedBy: 'clase', orphanRemoval: true)]
-    private Collection $especializacions;
+    private Collection $especializaciones;
 
 
     /**
@@ -64,7 +64,7 @@ class Clases
 
     public function __construct()
     {
-        $this->especializacions = new ArrayCollection();
+        $this->especializaciones = new ArrayCollection();
         $this->jefes = new ArrayCollection();
         $this->nivel = new ArrayCollection();
         $this->personajes = new ArrayCollection();
@@ -139,15 +139,15 @@ class Clases
     /**
      * @return Collection<int, Especializacion>
      */
-    public function getEspecializacions(): Collection
+    public function getespecializaciones(): Collection
     {
-        return $this->especializacions;
+        return $this->especializaciones;
     }
 
     public function addEspecializacion(Especializacion $especializacion): static
     {
-        if (!$this->especializacions->contains($especializacion)) {
-            $this->especializacions->add($especializacion);
+        if (!$this->especializaciones->contains($especializacion)) {
+            $this->especializaciones->add($especializacion);
             $especializacion->setClase($this);
         }
 
@@ -156,7 +156,7 @@ class Clases
 
     public function removeEspecializacion(Especializacion $especializacion): static
     {
-        if ($this->especializacions->removeElement($especializacion)) {
+        if ($this->especializaciones->removeElement($especializacion)) {
             // set the owning side to null (unless already changed)
             if ($especializacion->getClase() === $this) {
                 $especializacion->setClase(null);

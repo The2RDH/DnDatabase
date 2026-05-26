@@ -10,11 +10,16 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use App\Entity\Jefes;
 use App\Entity\Razas;
 use App\Entity\Clases;
 use App\Entity\Estado;
 use App\Entity\Estadisticas;
+use App\Entity\Especializacion;
+use App\Entity\Alineamiento;
+use App\Entity\Jugadores;
+use App\Entity\Personaje;
 
 class JefesAdmin extends AbstractAdmin
 {
@@ -22,7 +27,7 @@ class JefesAdmin extends AbstractAdmin
     {
         return $object instanceof Jefes && $object->getId()
             ? $object->getNombre()
-            : 'Nuevo Jefe';
+            : 'Nuevo Jefe de Élite';
     }
 
     protected function configureListFields(ListMapper $list): void
@@ -30,7 +35,7 @@ class JefesAdmin extends AbstractAdmin
         $list
             ->addIdentifier('nombre', null, [
                 'label' => 'Nombre',
-                'header_style' => 'width: 15%;'
+                'header_style' => 'width: 25%; font-weight: bold;'
             ])
             ->add('nivel', null, [
                 'label' => 'Nivel',
@@ -39,49 +44,34 @@ class JefesAdmin extends AbstractAdmin
             ])
             ->add('raza', null, [
                 'label' => 'Raza',
-                'header_style' => 'width: 10%;',
+                'header_style' => 'width: 13%;',
                 'associated_property' => 'nombre'
             ])
             ->add('clase', null, [
                 'label' => 'Clase',
-                'header_style' => 'width: 10%;',
+                'header_style' => 'width: 13%;',
                 'associated_property' => 'nombre'
             ])
             ->add('estado', null, [
-                'label' => 'Estado vital',
-                'header_style' => 'width: 10%;',
+                'label' => 'Estado Vital',
+                'header_style' => 'width: 7%;', 
                 'associated_property' => 'nombre'
             ])
-            ->add('ataquesJefes', 'many_to_many', [
-                'label' => 'Habilidades especiales',
-                'header_style' => 'width: 20%;',
-                'associated_property' => 'nombre' 
-            ])
-            ->add('estadisticas', null, [
-                'label' => 'ID Estadísticas',
-                'row_align' => 'center',
-                'header_style' => 'text-align: center; width: 110px;',
-                'associated_property' => 'id', 
-                'route' => [
-                    'name' => 'edit'
-                ],
-            ])
-
             ->add('descubierto', 'boolean', [
-                'label' => 'Descubierto',
-                'header_style' => 'text-align: center; width: 90px;',
+                'label' => 'Avistado',
+                'header_style' => 'text-align: center; width: 10%;', 
                 'row_align' => 'center',
                 'editable' => true
             ])
             ->add('derrotado', 'boolean', [
                 'label' => 'Derrotado',
-                'header_style' => 'text-align: center; width: 90px;',
+                'header_style' => 'text-align: center; width: 10%;', 
                 'row_align' => 'center',
                 'editable' => true
             ])
             ->add('_action', 'actions', [
                 'label' => 'Acciones',
-                'header_style' => 'text-align: center; width: 15%;',
+                'header_style' => 'text-align: center; width: 12%;',
                 'actions' => [
                     'edit' => [],
                     'delete' => [],
@@ -92,72 +82,128 @@ class JefesAdmin extends AbstractAdmin
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
         $filter
-            ->add('nombre', null, ['label' => 'Nombre'])
-            ->add('nivel', null, ['label' => 'Nivel'])
-            ->add('raza', null, ['label' => 'Raza'])
-            ->add('clase', null, ['label' => 'Clase'])
-            ->add('derrotado', null, ['label' => '¿Está Derrotado?'])
-            ->add('descubierto', null, ['label' => '¿Está Descubierto?']);
+            ->add('nombre')
+            ->add('nivel')
+            ->add('raza')
+            ->add('clase')
+            ->add('estado')
+            ->add('derrotado')
+            ->add('analizado')
+            ->add('descubierto');
     }
 
     protected function configureFormFields(FormMapper $form): void
     {
         $form
-            ->with('Datos del Encuentro', ['class' => 'col-md-7'])
+            ->with('Perfil del Jefe', ['class' => 'col-md-7'])
                 ->add('nombre', TextType::class, [
                     'label' => 'Nombre del Jefe',
                     'attr' => ['maxlength' => 30]
                 ])
                 ->add('nivel', IntegerType::class, [
-                    'label' => 'Nivel / Desafío'
+                    'label' => 'Nivel de Desafío'
                 ])
-                ->add('descubierto', CheckboxType::class, [
-                    'label' => 'Visible para los jugadores',
-                    'required' => false
-                ])
-                ->add('derrotado', CheckboxType::class, [
-                    'label' => 'Marcado como derrotado en la campaña',
-                    'required' => false
-                ])
-            ->end()
-            
-            ->with('Rasgos y Estado', ['class' => 'col-md-5'])
                 ->add('raza', EntityType::class, [
                     'class' => Razas::class,
                     'label' => 'Raza',
-                    'placeholder' => 'Selecciona una raza...',
+                    'placeholder' => 'Selecciona raza...',
                     'required' => false
                 ])
                 ->add('clase', EntityType::class, [
                     'class' => Clases::class,
                     'label' => 'Clase',
-                    'placeholder' => 'Selecciona una clase...',
+                    'placeholder' => 'Selecciona clase...',
                     'required' => false
                 ])
+                ->add('especializacion', EntityType::class, [
+                    'class' => Especializacion::class,
+                    'label' => 'Especialización',
+                    'placeholder' => 'Selecciona especialización...',
+                    'required' => false
+                ])
+                ->add('imagen', TextType::class, [
+                    'label' => 'Ruta de la Imagen',
+                    'required' => false,
+                    'attr' => ['placeholder' => 'media/images/default.jpg'] 
+                ])
+                ->add('token', TextType::class, [
+                    'label' => 'Ruta del Token',
+                    'required' => false,
+                    'attr' => ['placeholder' => 'media/tokens/default.png'] 
+                ])
+            ->end()
+
+            ->with('Estado y Campaña', ['class' => 'col-md-5'])
                 ->add('estado', EntityType::class, [
                     'class' => Estado::class,
                     'label' => 'Estado Vital',
-                    'placeholder' => 'Selecciona el estado...',
+                    'placeholder' => 'Selecciona el estado...', 
                     'required' => false
+                ])
+                ->add('descubierto', CheckboxType::class, [
+                    'label' => '¿Registrado en el códice?',
+                    'required' => false,
+                    'help' => 'Determina si el jefe se mostrará a los jugadores'
+                ])
+                ->add('derrotado', CheckboxType::class, [
+                    'label' => '¿Ha sido derrotado?',
+                    'required' => false
+                ])
+                ->add('analizado', CheckboxType::class, [
+                    'label' => '¿Ha sido analizado?',
+                    'required' => false,
+                    'help' => 'Determina si los jugadores conocen los detalles del jefe (Debilidades, Fortalezas y Estadísticas)'
                 ])
                 ->add('estadisticas', EntityType::class, [
                     'class' => Estadisticas::class,
-                    'label' => 'Hoja de estadísticas (ID)',
-                    'placeholder' => 'Selecciona un ID de estadísticas...',
-                    'required' => true, 
+                    'label' => 'Hoja de Estadísticas (ID)',
+                    'placeholder' => 'Asignar valores numéricos...',
+                    'required' => false,
                     'attr' => ['class' => 'select2'], 
                     'choice_label' => function (Estadisticas $est) {
                         return sprintf(
-                            'ID: %d — [FUE: %d | DES: %d | CON: %d | INT: %d | SAB: %d | CAR: %d]',
-                            $est->getId(),
-                            $est->getFuerza(),
-                            $est->getDestreza(),
-                            $est->getConstitucion(),
-                            $est->getIntelecto(), 
-                            $est->getSabiduria(),
-                            $est->getCarisma()
+                            'ID: %d — [FUE: %d | DES: %d | CON: %d | INT: %d]',
+                            $est->getId(), $est->getFuerza(), $est->getDestreza(), $est->getConstitucion(), $est->getIntelecto()
                         );
                     },
+                ])
+                ->add('fortalezas', TextareaType::class, [
+                    'label' => 'Fortalezas',
+                    'required' => false,
+                    'attr' => ['rows' => 2, 'placeholder' => 'Inmunidades, resistencias...']
+                ])
+                ->add('debilidades', TextareaType::class, [
+                    'label' => 'Debilidades',
+                    'required' => false,
+                    'attr' => ['rows' => 2, 'placeholder' => 'Vulnerabilidades...']
+                ])
+                ->add('golpeGracia', EntityType::class, [
+                    'class' => Personaje::class,
+                    'label' => 'Golpe de gracia',
+                    'placeholder' => 'Selecciona quién acabó con el jefe...', 
+                    'required' => false
+                ])
+            ->end()
+
+            ->with('Descripción y Lore', ['class' => 'col-md-12'])
+                ->add('alineamiento', EntityType::class, [
+                    'class' => Alineamiento::class,
+                    'label' => 'Alineamiento',
+                    'placeholder' => 'Selecciona tendencia moral...',
+                    'required' => false
+                ])
+                ->add('edad', TextType::class, ['label' => 'Edad', 'required' => false, 'attr' => ['class' => 'col-md-4']])
+                ->add('altura', TextType::class, ['label' => 'Altura', 'required' => false, 'attr' => ['class' => 'col-md-4']])
+                ->add('peso', TextType::class, ['label' => 'Peso', 'required' => false, 'attr' => ['class' => 'col-md-4']])
+                ->add('descripcion', TextareaType::class, [
+                    'label' => 'Descripción',
+                    'required' => false,
+                    'attr' => ['rows' => 3]
+                ])
+                ->add('lore', TextareaType::class, [
+                    'label' => 'Historia y Trasfondo',
+                    'required' => false,
+                    'attr' => ['rows' => 6]
                 ])
             ->end();
     }

@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Códice Mundial - Otras Características{% block title_append %}{% endblock %}{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+
+    <!-- CABECERA PRINCIPAL -->
+    <div class="card shadow-sm border border-2 bg-dark text-white p-4 mb-5" style="background: linear-gradient(135deg, #1e1e24 0%, #2a2a35 100%);">
+        <div class="d-flex align-items-center gap-3">
+            <div class="fs-1 text-warning">
+                <i class="fa-solid fa-book-atlas"></i>
+            </div>
+            <div>
+                <h1 class="display-6 fw-black text-uppercase text-warning mb-0" style="letter-spacing: 0.5px;">Registro de datos variados y mecácnicas</h1>
+                <span class="small text-uppercase font-monospace" style="font-size: 0.7rem; letter-spacing: 1px;">Información secundaria y registros del reino</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- REJILLA DE CATEGORÍAS -->
+    <div class="row g-4">
+
+        <!-- TARJETA: ALINEAMIENTOS (ACTIVA) -->
+        <div class="col-12 col-md-6 col-lg-4">
+            <a href="{{ path('app_lobby_alineamientos') }}" class="text-decoration-none custom-compendio-card-link">
+                <div class="card h-100 shadow-sm border border-2 bg-white transition-card">
+                    <div class="card-body p-4 d-flex align-items-start gap-3">
+                        <div class="flex-shrink-0 rounded p-3 bg-light border text-danger fs-3">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold text-dark text-uppercase mb-1" style="font-size: 1.05rem; letter-spacing: 0.5px;">
+                                Alineamientos
+                            </h5>
+                            <p class="text-dark-emphasis small mb-0" style="line-height: 1.5;">
+                                La brújula moral y ética que rige el comportamiento de las almas, facciones y criaturas.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card-footer border-top bg-light px-4 py-2 d-flex justify-content-between align-items-center">
+                        <span class="text-danger font-monospace text-uppercase fw-bold" style="font-size: 0.7rem; letter-spacing: 0.5px;">Consultar registros</span>
+                        <i class="fa-solid fa-arrow-right text-secondary small transition-arrow"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- TARJETA: RAZAS -->
+        <div class="col-12 col-md-6 col-lg-4">
+            <a href="{{ path('app_lobby_razas') }}" class="text-decoration-none custom-compendio-card-link">
+                <div class="card h-100 shadow-sm border border-2 bg-white transition-card">
+                    <div class="card-body p-4 d-flex align-items-start gap-3">
+                        <div class="flex-shrink-0 rounded p-3 bg-light border text-danger fs-3">
+                            <i class="fa-solid fa-dna"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold text-dark text-uppercase mb-1" style="font-size: 1.05rem; letter-spacing: 0.5px;">
+                                Razas y Especies
+                            </h5>
+                            <p class="text-dark-emphasis small mb-0" style="line-height: 1.5;">
+                                Estudio morfológico, cultural y geográfico de las distintas especies que pueblan el mundo conocido.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card-footer border-top bg-light px-4 py-2 d-flex justify-content-between align-items-center">
+                        <span class="text-danger font-monospace text-uppercase fw-bold" style="font-size: 0.7rem; letter-spacing: 0.5px;">Consultar registros</span>
+                        <i class="fa-solid fa-arrow-right text-secondary small transition-arrow"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- TARJETA: CLASES -->
+        <div class="col-12 col-md-6 col-lg-4">
+            <a href="{{ path('app_lobby_clases') }}" class="text-decoration-none custom-compendio-card-link">
+                <div class="card h-100 shadow-sm border border-2 bg-white transition-card">
+                    <div class="card-body p-4 d-flex align-items-start gap-3">
+                        <div class="flex-shrink-0 rounded p-3 bg-light border text-danger fs-3">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold text-dark text-uppercase mb-1" style="font-size: 1.05rem; letter-spacing: 0.5px;">
+                                Clases y Especializaciones
+                            </h5>
+                            <p class="text-dark-emphasis small mb-0" style="line-height: 1.5;">
+                                Desglose de disciplinas marciales, doctrinas sagradas y artes arcanas practicadas en el continente.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card-footer border-top bg-light px-4 py-2 d-flex justify-content-between align-items-center">
+                        <span class="text-danger font-monospace text-uppercase fw-bold" style="font-size: 0.7rem; letter-spacing: 0.5px;">Consultar registros</span>
+                        <i class="fa-solid fa-arrow-right text-secondary small transition-arrow"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .fw-black { font-weight: 900; }
+    
+    /* Animación e interacción sutiles igual que en el resto de vistas del Códice */
+    .custom-compendio-card-link .transition-card {
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .custom-compendio-card-link:hover .transition-card {
+        transform: translateY(-3px);
+        border-color: #dc3545 !important; /* Rojo de acento del proyecto */
+    }
+    .custom-compendio-card-link:hover .transition-arrow {
+        transform: translateX(3px);
+        color: #dc3545 !important;
+    }
+    .transition-arrow { transition: transform 0.2s ease, color 0.2s ease; }
+</style>
+{% endblock %}

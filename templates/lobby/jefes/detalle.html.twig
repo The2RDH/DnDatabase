@@ -1,0 +1,387 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ jefe.nombre }}{% block title_append %}{% endblock %}{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+
+    <!-- BOTÓN VOLVER -->
+    <div class="mb-4">
+        <a href="{{ path('app_lobby_jefes') }}" class="btn btn-sm btn-outline-secondary text-uppercase fw-bold">
+            <i class="fa-solid fa-arrow-left me-1"></i> Volver al Códice
+        </a>
+    </div>
+
+    <!-- CABECERA PRINCIPAL -->
+    <div class="card shadow-sm border border-2 bg-dark text-white p-4 mb-4" style="background: linear-gradient(135deg, #1e1e24 0%, #2a2a35 100%);">
+        <div class="d-flex flex-column flex-sm-row align-items-center gap-4">
+            
+            <!-- Token con lógica de Derrotado -->
+            <div class="position-relative">
+                {% if jefe.token %}
+                    <img src="{{ asset(jefe.token) }}" alt="{{ jefe.nombre }}" 
+                         class="img-fluid rounded-circle border border-3 border-warning shadow img-zoom-trigger" 
+                         style="width: 110px; height: 110px; object-fit: cover;"
+                         data-bs-toggle="modal" data-bs-target="#modalImagenJefe" data-img-src="{{ asset(jefe.token) }}">
+                {% else %}
+                    <div class="rounded-circle bg-secondary border border-3 border-warning d-flex align-items-center justify-content-center text-white shadow" 
+                         style="width: 110px; height: 110px; font-size: 2.2rem;">
+                        <i class="fa-solid fa-crown opacity-50"></i>
+                    </div>
+                {% endif %}
+                
+                {# Sello de "DERROTADO" #}
+                {% if jefe.derrotado %}
+                    <div class="position-absolute top-50 start-50 translate-middle bg-danger text-white text-uppercase fw-black px-2 py-0.5 rounded shadow" 
+                         style="font-size: 0.6rem; letter-spacing: 1px; transform: translate(-50%, -50%) rotate(-15deg) !important; z-index: 2; border: 1px solid white;">
+                        Abatido
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Título y Nivel -->
+            <div class="text-center text-sm-start flex-grow-1">
+                <span class="badge bg-danger text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 1px;">
+                    Nivel de Peligro: {{ jefe.nivel }}
+                </span>
+                <h1 class="display-5 fw-black text-uppercase text-warning mb-0" style="letter-spacing: 0.5px;">{{ jefe.nombre }}</h1>
+            </div>
+            
+            <!-- Estado -->
+            <div class="text-center text-sm-end">
+                {% if jefe.estado %}
+                    {% set est_lower = jefe.estado.nombre|lower %}
+                    <span class="badge px-3 py-2 text-uppercase rounded-pill fw-bold shadow-sm" style="font-size: 0.8rem;
+                        {% if 'vivo' in est_lower %} background-color: #198754;
+                        {% elseif 'muerto' in est_lower or 'fallecido' in est_lower %} background-color: #dc3545;
+                        {% else %} background-color: #6c757d; {% endif %} color: white;">
+                        {{ jefe.estado.nombre }}
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- GOLPE DE GRACIA -->
+    <div class="card shadow-sm border border-2 p-3 mb-4 bg-white">
+        <div class="d-flex align-items-center gap-3">
+            <div class="fs-3 text-secondary ps-2">
+                <i class="fa-solid fa-skull"></i>
+            </div>
+            <div>
+                <span class="text-muted d-block small text-uppercase font-monospace" style="font-size: 0.7rem;">Estado del enemigo</span>
+                <div class="fw-bold">
+                    {% if not jefe.derrotado %}
+                        <span class="text-success"><i class="fa-solid fa-shield-halved me-1"></i> El objetivo sigue siendo una amenaza. Aún no ha sido derrotado.</span>
+                    {% else %}
+                        {% if jefe.golpeGracia %}
+                            <span class="text-danger">
+                                <i class="fa-solid fa-trophy me-1"></i> Objetivo abatido. Golpe de gracia asestado por: 
+                                <a href="{{ path('app_lobby_personaje_detalle', {'id': jefe.golpeGracia.id}) }}" class="text-danger fw-black text-decoration-none hover-underline ms-1">
+                                    {{ jefe.golpeGracia.nombre }}
+                                </a>
+                            </span>
+                        {% else %}
+                            <span class="text-muted">
+                                <i class="fa-solid fa-circle-check me-1"></i> El objetivo ha sido derrotado, pero ningún personaje se atribuye el golpe de gracia.
+                            </span>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUERPO DE LA FICHA -->
+    <div class="row g-4">
+        
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="col-12 col-lg-5">
+            <div class="card shadow-sm border border-2 overflow-hidden bg-white mb-4">
+                <div class="position-relative bg-dark d-flex align-items-center justify-content-center overflow-hidden img-container-zoom" style="min-height: 480px; max-height: 650px;">
+                    {% if jefe.imagen %}
+                        <img src="{{ asset(jefe.imagen) }}" alt="{{ jefe.nombre }}" 
+                             class="img-fluid w-100 h-100 img-zoom-trigger" 
+                             style="object-fit: cover; object-position: center; min-height: 480px;"
+                             data-bs-toggle="modal" data-bs-target="#modalImagenJefe" data-img-src="{{ asset(jefe.imagen) }}">
+                    {% else %}
+                        <div class="text-center text-white-50 p-5">
+                            <i class="fa-solid fa-image fa-4x mb-3 opacity-25"></i>
+                            <p class="small text-uppercase tracking-wider mb-0">Retrato no disponible en el Códice</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="card-body bg-light border-top">
+                    <div class="row g-3 text-center">
+                        <div class="col-4 border-end">
+                            <span class="text-muted d-block small text-uppercase" style="font-size: 0.7rem;">Edad</span>
+                            <span class="fw-bold text-dark">{{ jefe.edad ?: '???' }}</span>
+                        </div>
+                        <div class="col-4 border-end">
+                            <span class="text-muted d-block small text-uppercase" style="font-size: 0.7rem;">Altura</span>
+                            <span class="fw-bold text-dark">{{ jefe.altura ?: '???' }}</span>
+                        </div>
+                        <div class="col-4">
+                            <span class="text-muted d-block small text-uppercase" style="font-size: 0.7rem;">Peso</span>
+                            <span class="fw-bold text-dark">{{ jefe.peso ?: '???' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alineamiento -->
+            <div class="card shadow-sm border border-2 p-3 bg-white text-center">
+                <span class="text-muted text-uppercase small font-monospace d-block mb-1" style="font-size: 0.7rem;">Alineamiento Moral</span>
+                <span class="fw-bold text-dark fs-6">{{ jefe.alineamiento ? jefe.alineamiento.nombre : 'No clasificado' }}</span>
+            </div>
+        </div>
+
+        <!-- COLUMNA DERECHA: DATOS DE IMPORTANCIA, CAPACIDADES Y LORE -->
+        <div class="col-12 col-lg-7">
+            
+            <div class="card shadow-sm border border-2 mb-4 bg-white">
+                <div class="card-header bg-light border-bottom py-3">
+                    <h5 class="card-title text-uppercase fw-bold text-secondary mb-0" style="font-size: 0.85rem; letter-spacing: 0.5px;">
+                        <i class="fa-solid fa-address-card me-1 text-danger"></i> Datos del enemigo
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4 text-center text-sm-start">
+                        <div class="col-12 col-sm-4 border-end-sm">
+                            <span class="text-muted d-block text-uppercase small font-monospace mb-1" style="font-size: 0.75rem;">Raza</span>
+                            <div class="fs-5 fw-bold text-dark-emphasis">
+                                <i class="fa-solid fa-dna text-muted me-1 small"></i> {{ jefe.raza ? jefe.raza.nombre : 'Desconocida' }}
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-4 border-end-sm">
+                            <span class="text-muted d-block text-uppercase small font-monospace mb-1" style="font-size: 0.75rem;">Clase</span>
+                            <div class="fs-5 fw-bold text-dark-emphasis">
+                                <i class="fa-solid fa-shield-halved text-muted me-1 small"></i> {{ jefe.clase ? jefe.clase.nombre : 'Sin Clase' }}
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <span class="text-muted d-block text-uppercase small font-monospace mb-1" style="font-size: 0.75rem;">Especialización</span>
+                            <div class="fs-5 fw-bold text-danger">
+                                <i class="fa-solid fa-wand-magic-sparkles me-1 small"></i> {{ jefe.especializacion ? jefe.especializacion.nombre : 'Ninguna' }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DESCRIPCIÓN BÁSICA -->
+            <div class="mb-4">
+                <h3 class="h6 text-uppercase fw-bold text-secondary mb-2 font-monospace">Descripción del enemigo</h3>
+                <p class="text-dark-emphasis bg-light p-3 rounded border" style="line-height: 1.6; font-style: italic; font-size: 0.95rem;">
+                    {{ jefe.descripcion ?: 'No se disponen de detalles superficiales sobre las costumbres de este objetivo.' }}
+                </p>
+            </div>
+
+            <!-- CONTROL DE INFORMACIÓN MEDIANTE EL CAMPO "ANALIZADO" -->
+            {% if jefe.analizado %}
+                
+                <!-- FORTALEZAS Y DEBILIDADES -->
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-sm-6">
+                        <div class="card h-100 border-success-subtle bg-success-subtle bg-opacity-10">
+                            <div class="card-body p-3">
+                                <h5 class="h6 text-success text-uppercase fw-bold mb-2">
+                                    <i class="fa-solid fa-shield me-1"></i> Fortalezas e Inmunidades
+                                </h5>
+                                <p class="small text-dark mb-0" style="white-space: pre-line;">{{ jefe.fortalezas ?: 'Ninguna identificada.' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="card h-100 border-danger-subtle bg-danger-subtle bg-opacity-10">
+                            <div class="card-body p-3">
+                                <h5 class="h6 text-danger text-uppercase fw-bold mb-2">
+                                    <i class="fa-solid fa-heart-crack me-1"></i> Puntos débiles 
+                                </h5>
+                                <p class="small text-dark mb-0" style="white-space: pre-line;">{{ jefe.debilidades ?: 'No se han reportado puntos flacos.' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ESTADÍSTICAS BASE -->
+                {% if jefe.estadisticas %}
+                    <div class="card shadow-sm border border-2 mb-4">
+                        <div class="card-body p-3">
+                            <h5 class="h6 text-uppercase fw-bold text-dark mb-3"><i class="fa-solid fa-chart-bar text-muted me-1"></i> Estadísticas Principales</h5>
+                            <div class="row g-2 text-center small">
+                                <div class="col-4 col-sm-2 bg-light p-2 rounded border">
+                                    <span class="text-muted d-block font-monospace" style="font-size:0.65rem;">FUERZA</span>
+                                    <strong class="fs-5 text-dark">{{ jefe.estadisticas.fuerza ?? '?' }}</strong>
+                                </div>
+                                <div class="col-4 col-sm-2 bg-light p-2 rounded border">
+                                    <span class="text-muted d-block font-monospace" style="font-size:0.65rem;">DESTREZA</span>
+                                    <strong class="fs-5 text-dark">{{ jefe.estadisticas.destreza ?? '?' }}</strong>
+                                </div>
+                                <div class="col-4 col-sm-2 bg-light p-2 rounded border">
+                                    <span class="text-muted d-block font-monospace" style="font-size:0.65rem;">CONSTITUCIÓN</span>
+                                    <strong class="fs-5 text-dark">{{ jefe.estadisticas.constitucion ?? '?' }}</strong>
+                                </div>
+                                <div class="col-4 col-sm-2 bg-light p-2 rounded border">
+                                    <span class="text-muted d-block font-monospace" style="font-size:0.65rem;">INTELECTO</span>
+                                    <strong class="fs-5 text-dark">{{ jefe.estadisticas.intelecto ?? '?' }}</strong>
+                                </div>
+                                <div class="col-4 col-sm-2 bg-light p-2 rounded border">
+                                    <span class="text-muted d-block font-monospace" style="font-size:0.65rem;">SABIDURÍA</span>
+                                    <strong class="fs-5 text-dark">{{ jefe.estadisticas.sabiduria ?? '?' }}</strong>
+                                </div>
+                                <div class="col-4 col-sm-2 bg-light p-2 rounded border">
+                                    <span class="text-muted d-block font-monospace" style="font-size:0.65rem;">CARISMA</span>
+                                    <strong class="fs-5 text-dark">{{ jefe.estadisticas.carisma ?? '?' }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- ATAQUES Y RASGOS-->
+                <div class="mb-4">
+                    <ul class="nav nav-tabs mb-3" id="jefeTabs" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link active text-uppercase fw-bold small" id="ataques-tab" data-bs-toggle="tab" data-bs-target="#ataques" type="button" role="tab">
+                                Ataques Especiales ({{ jefe.ataquesJefes|length }})
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link text-uppercase fw-bold small" id="rasgos-tab" data-bs-toggle="tab" data-bs-target="#rasgos" type="button" role="tab">
+                                Rasgos Pasivos ({{ jefe.rasgosjefes|length }})
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="tab-content bg-white border border-top-0 rounded-bottom p-3" id="jefeTabsContent">
+                        <div class="tab-pane fade show active" id="ataques" role="tabpanel">
+                            {% if jefe.ataquesJefes is not empty %}
+                                <div class="list-group list-group-flush">
+                                    {% for ataque in jefe.ataquesJefes %}
+                                        <div class="list-group-item py-2 px-1">
+                                            <h6 class="fw-bold text-dark mb-1 text-uppercase small">{{ ataque.nombre }}</h6>
+                                            <p class="text-muted small mb-0">{{ ataque.descripcion ?: 'Sin datos analizados.' }}</p>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted small py-2 mb-0 text-center">No se conocen técnicas especiales.</p>
+                            {% endif %}
+                        </div>
+                        <div class="tab-pane fade" id="rasgos" role="tabpanel">
+                            {% if jefe.rasgosjefes is not empty %}
+                                <div class="list-group list-group-flush">
+                                    {% for rasgo in jefe.rasgosjefes %}
+                                        <div class="list-group-item py-2 px-1">
+                                            <h6 class="fw-bold text-dark mb-1 text-uppercase small">{{ rasgo.nombre }}</h6>
+                                            <p class="text-muted small mb-0">{{ rasgo.descripcion ?: 'Sin descripción de rasgo.' }}</p>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted small py-2 mb-0 text-center">No se conocen rasgos pasivos.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LORE -->
+                {% if jefe.lore %}
+                    <div class="accordion shadow-sm border border-2 rounded mb-4" id="accordionLore">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header" id="headingLore">
+                                <button class="accordion-button collapsed text-uppercase fw-bold text-secondary bg-light font-monospace small" 
+                                        type="button" data-bs-toggle="collapse" data-bs-target="#collapseLore" aria-expanded="false" aria-controls="collapseLore">
+                                    <i class="fa-solid fa-book-bookmark text-danger me-2"></i> Mostrar Archivo de Lore
+                                </button>
+                            </h2>
+                            <div id="collapseLore" class="accordion-collapse collapse" aria-labelledby="headingLore" data-bs-parent="#accordionLore">
+                                <div class="accordion-body bg-white text-muted small p-4" style="line-height: 1.6; white-space: pre-line;">
+                                    {{ jefe.lore }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+            {% else %}
+                <!-- MENSAJE DE ADVERTENCIA CUANDO "ANALIZADO" ES FALSE -->
+                <div class="card border-warning bg-warning bg-opacity-10 text-center p-5 shadow-sm my-4">
+                    <div class="text-warning display-4 mb-3">
+                        <i class="fa-solid fa-circle-exclamation opacity-75"></i>
+                    </div>
+                    <h4 class="fw-bold text-uppercase text-warning-emphasis mb-2" style="font-size: 1.1rem; letter-spacing: 0.5px;">Información de Combate Desconocida</h4>
+                    <p class="text-muted mx-auto mb-0 small" style="max-width: 480px;">
+                        El grupo de aventureros aun no ha rastreado o descubierto suficiente información respecto a esta amenaza como para poder mostrar más datos...  Derrota al jefe o realiza tareas de investigación para desvelar sus estadísticas, debilidades, destrezas y registros antiguos. 
+                    </p>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL PARA VISTA PREVIA DE IMÁGENES -->
+<div class="modal fade" id="modalImagenJefe" tabindex="-1" aria-labelledby="modalImagenJefeLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark border border-secondary shadow-lg">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title text-warning small text-uppercase font-monospace" id="modalImagenJefeLabel">
+                    <i class="fa-solid fa-eye me-1"></i> Inspeccionar Retrato: {{ jefe.nombre }}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-4">
+                <img id="imagenModalTarget" src="" alt="{{ jefe.nombre }}" class="img-fluid rounded border border-secondary bg-neutral shadow" style="max-height: 80vh; object-fit: contain;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .fw-black { font-weight: 900; }
+    .nav-tabs .nav-link { color: #6c757d; border: 1px solid transparent; }
+    .nav-tabs .nav-link.active { color: #dc3545 !important; font-weight: bold; border-color: #dee2e6 #dee2e6 #fff; }
+    
+    @media (min-width: 576px) {
+        .border-end-sm { border-right: 1px solid #dee2e6 !important; }
+    }
+    
+    /* Efecto pulse sutil para el icono animado de alerta */
+    .animate-pulse {
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.08); opacity: 0.7; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .img-zoom-trigger {
+        cursor: zoom-in;
+        transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    .img-zoom-trigger:hover {
+        transform: scale(1.02);
+        filter: brightness(1.1);
+    }
+    .img-container-zoom {
+        background-color: #0b0b0d !important; 
+    }
+</style>
+
+<!-- SCRIPT DINÁMICO PARA EL MODAL -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modalImagenJefe = document.getElementById('modalImagenJefe');
+        var modalImgTarget = document.getElementById('imagenModalTarget');
+
+        modalImagenJefe.addEventListener('show.bs.modal', function (event) {
+            var triggerElement = event.relatedTarget;
+            var imgSrc = triggerElement.getAttribute('data-img-src');
+            modalImgTarget.setAttribute('src', imgSrc);
+        });
+    });
+</script>
+{% endblock %}

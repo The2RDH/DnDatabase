@@ -1,27 +1,154 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Lobby de Jugadores{% endblock %}
+{% block title %}Lobby del Héroe{% endblock %}
 
 {% block body %}
-    <div style="max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-        <h1 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
-            ⚔️ Bienvenido al Lobby de Jugadores
-        </h1>
-        <p>Estás dentro del proyecto de forma segura. Esta vista es exclusiva para los jugadores de la partida.</p>
+<div class="container py-5">
+
+    <!-- CABECERA PRINCIPAL: TONOS CLAROS Y LIMPIOS -->
+    <div class="card shadow-sm border border-2 bg-light p-4 mb-5">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="fs-1 text-danger">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h1 class="display-6 fw-black text-uppercase text-dark mb-0" style="letter-spacing: 0.5px;">Panel del Jugador</h1>
+                    <span class="text-muted small text-uppercase font-monospace" style="font-size: 1.3rem; letter-spacing: 1px;">
+                        Bienvenido a la campaña, <span class="text-dark fw-bold">{{ app.user.userIdentifier }}</span>
+                    </span>
+                </div>
+            </div>
+            <div>
+                <a href="{{ path('app_logout') }}" class="btn btn-sm btn-outline-secondary text-uppercase fw-bold font-monospace">
+                    <i class="fa-solid fa-right-from-bracket me-1"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
         
-        <div style="background: #e8f4fd; padding: 15px; border-left: 4px solid #3498db; margin: 20px 0; border-radius: 4px;">
-            <strong>Tu información de sesión:</strong>
-            <ul>
-                <li>Usuario: <code>{{ app.user.userIdentifier }}</code></li>
-                <li>Rol actual: <code>{{ app.user.roles|join(', ') }}</code></li>
-            </ul>
+        <!-- SECCIÓN IZQUIERDA: MIS PERSONAJES (YA RECONOCIDOS) -->
+        <div class="col-12 col-lg-8">
+            <h5 class="text-uppercase fw-bold text-secondary font-monospace mb-3 d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                <i class="fa-solid fa-users text-danger"></i> Tus Personajes Vinculados
+            </h5>
+
+            {# Al pasarlo desde el controlador, la validación es directa y no falla #}
+            {% if personajes is defined and personajes is not empty %}
+                <div class="row g-3">
+                    {% for personaje in personajes %}
+                        <div class="col-12 col-md-6">
+                            <div class="card h-100 shadow-sm border border-2 bg-white">
+                                <div class="card-body p-3 d-flex align-items-center gap-3">
+                                    
+                                    <!-- Token del Personaje (Usa el de su clase como fallback) -->
+                                    {% if personaje.token is defined and personaje.token is not empty %}
+                                        <img src="{{ asset('media/tokens/' ~ personaje.token) }}" alt="{{ personaje.nombre }}" class="rounded-circle border shadow-sm flex-shrink-0" style="width: 60px; height: 60px; object-fit: cover;">
+                                    {% elseif personaje.clase is not null and personaje.clase.token is not empty %}
+                                        <img src="{{ asset('media/class/' ~ personaje.clase.token) }}" alt="{{ personaje.nombre }}" class="rounded-circle border shadow-sm flex-shrink-0" style="width: 60px; height: 60px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="rounded-circle bg-light border text-secondary d-flex align-items-center justify-content-center flex-shrink-0" style="width: 60px; height: 60px;">
+                                            <i class="fa-solid fa-user-shield fs-4"></i>
+                                        </div>
+                                    {% endif %}
+
+                                    <!-- Datos básicos del Héroe -->
+                                    <div class="overflow-hidden">
+                                        <h4 class="h6 fw-bold text-dark text-uppercase text-truncate mb-1" style="letter-spacing: 0.3px;">
+                                            {{ personaje.nombre }}
+                                        </h4>
+                                        <div class="d-flex flex-wrap gap-1 align-items-center">
+                                            <span class="badge bg-danger-subtle text-danger-emphasis font-monospace text-uppercase" style="font-size: 0.6rem;">
+                                                {{ personaje.clase.nombre ?? 'Sin Clase' }}
+                                            </span>
+                                            <span class="badge bg-secondary-subtle text-secondary-emphasis font-monospace text-uppercase" style="font-size: 0.6rem;">
+                                                {{ personaje.raza.nombre ?? 'Sin Raza' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-light px-3 py-2 d-flex justify-content-between align-items-center border-top">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="text-muted font-monospace small" style="font-size: 0.65rem;">
+                                            Nivel {{ personaje.nivel ?? '1' }}
+                                        </span>
+                                        <span class="text-secondary-emphasis opacity-25">|</span>
+                                        <span class="text-warning-emphasis fw-bold font-monospace small d-flex align-items-center gap-1" style="font-size: 0.65rem;" title="Monedas de Oro">
+                                            <i class="fa-solid fa-coins text-warning"></i> {{ personaje.oro ?? 0 }} Oro
+                                        </span>
+                                    </div>
+                                    
+                                    <a href="{{ path('app_lobby_mi_personaje') }}" class="text-danger text-decoration-none font-monospace text-uppercase fw-bold" style="font-size: 0.6rem; letter-spacing: 0.5px;">
+                                        Ver Ficha <i class="fa-solid fa-chevron-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <!-- RECOMENDACIÓN REVISADA (AMIGABLE) -->
+                <div class="card border border-2 bg-white p-4 shadow-sm">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="fs-2 text-secondary opacity-75">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold text-dark text-uppercase mb-1" style="font-size: 0.95rem;">¡Tu aventura está a punto de comenzar!</h5>
+                            <p class="text-muted small mb-0" style="line-height: 1.5;">
+                                Oh, parece que aún no tienes ningún personaje vinculado a tu cuenta. ¡Ponte en contacto con tu Máster para dar de alta tu primera hoja de personaje o asignarte tu héroe en la mesa!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
 
-        <p>Pronto aquí podrás ver tu ficha de personaje, inventario y los elementos del mundo que hayas descubierto.</p>
-        
-        <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
-        <a href="{{ path('app_logout') }}" style="display: inline-block; background: #e74c3c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;">
-            Cerrar Sesión
-        </a>
+        <!-- SECCIÓN DERECHA: EXPLORACIÓN DEL MUNDO Y DATOS TÉCNICOS -->
+        <div class="col-12 col-lg-4">
+            
+            <!-- TARJETA DE INVITACIÓN A EXPLORAR -->
+            <h5 class="text-uppercase fw-bold text-secondary font-monospace mb-3 d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                <i class="fa-solid fa-compass text-danger"></i> Bitácora de Aventura
+            </h5>
+            <div class="card shadow-sm border border-2 bg-white p-4 mb-4">
+                <h5 class="fw-bold text-uppercase text-dark mb-2" style="font-size: 0.95rem;">Explora el Códice</h5>
+                <p class="text-muted small mb-3" style="line-height: 1.5;">
+                    Consulta las razas de los reinos, las sendas de combate y las disciplinas arcanas disponibles en este compendio.
+                </p>
+                <div class="d-grid gap-2">
+                    <a href="{{ path('app_lobby_otrasCaracteristicas') }}" class="btn btn-sm btn-outline-danger text-uppercase fw-bold font-monospace" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+                        <i class="fa-solid fa-book-open me-1"></i> Abrir Compendio
+                    </a>
+                </div>
+            </div>
+
+            <!-- DATOS DE LA CUENTA -->
+            <h5 class="text-uppercase fw-bold text-secondary font-monospace mb-3 d-flex align-items-center gap-2" style="font-size: 0.8rem; letter-spacing: 0.5px;">
+                <i class="fa-solid fa-user-gear text-muted"></i> Datos de Sesión
+            </h5>
+            <div class="card shadow-sm border border-2 bg-light p-3">
+                <div class="font-monospace small d-flex flex-column gap-2" style="font-size: 0.75rem;">
+                    <div class="d-flex justify-content-between border-bottom pb-1">
+                        <span class="text-muted">CUENTA:</span>
+                        <span class="fw-bold text-dark">{{ app.user.userIdentifier }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted">RANGO:</span>
+                        <span class="badge bg-secondary font-monospace text-uppercase" style="font-size: 0.55rem;">
+                            {{ app.user.roles|join(', ')|replace({'ROLE_USER': 'Jugador', 'ROLE_ADMIN': 'Administrador'}) }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
+</div>
+
+<style>
+    .fw-black { font-weight: 900; }
+</style>
 {% endblock %}

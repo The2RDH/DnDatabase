@@ -33,11 +33,18 @@ class Alineamiento
     #[ORM\OneToMany(targetEntity: Personaje::class, mappedBy: 'alineamiento')]
     private Collection $personajes;
 
+    /**
+     * @var Collection<int, Jefes>
+     */
+    #[ORM\OneToMany(targetEntity: Jefes::class, mappedBy: 'alineamiento')]
+    private Collection $jefes;
+
 
     public function __construct()
     {
         $this->deidades = new ArrayCollection();
         $this->personajes = new ArrayCollection();
+        $this->jefes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -132,5 +139,35 @@ class Alineamiento
     public function __toString(): string
     {
         return $this->nombre ?? 'Sin Alineamiento';
+    }
+
+    /**
+     * @return Collection<int, Jefes>
+     */
+    public function getJefes(): Collection
+    {
+        return $this->jefes;
+    }
+
+    public function addJefe(Jefes $jefe): static
+    {
+        if (!$this->jefes->contains($jefe)) {
+            $this->jefes->add($jefe);
+            $jefe->setAlineamiento($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJefe(Jefes $jefe): static
+    {
+        if ($this->jefes->removeElement($jefe)) {
+            // set the owning side to null (unless already changed)
+            if ($jefe->getAlineamiento() === $this) {
+                $jefe->setAlineamiento(null);
+            }
+        }
+
+        return $this;
     }
 }

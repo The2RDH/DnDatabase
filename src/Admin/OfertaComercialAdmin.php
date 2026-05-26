@@ -12,6 +12,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Doctrine\ORM\EntityRepository; // <--- REQUISITO: Importante para el QueryBuilder
 
 final class OfertaComercialAdmin extends AbstractAdmin
 {
@@ -81,22 +82,36 @@ final class OfertaComercialAdmin extends AbstractAdmin
                     'attr' => ['min' => 0, 'step' => '0.01', 'placeholder' => 'Ej: 49.99']
                 ])
                 ->add('cantidad', IntegerType::class, [
-                    'label' => 'Cantidad / Stock Inicial',
+                    'label' => 'Stock Inicial',
                     'attr' => ['min' => 0, 'placeholder' => 'Ej: 5 (0 para infinito o sin stock)']
                 ])
                 ->add('npc', EntityType::class, [
                     'class' => Npc::class,
-                    'choice_label' => 'nombre',
                     'label' => 'NPC que ofrece el artículo',
                     'placeholder' => 'Selecciona el comerciante...',
-                    'required' => false,
+                    'required' => true,
+                    'attr' => ['class' => 'select2'],
+                    //Filtro de NPCs comerciantes
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('n')
+                            ->where('n.comerciante = :esTienda')
+                            ->setParameter('esTienda', true)
+                            ->orderBy('n.nombre', 'ASC');
+                    },
+                    'choice_label' => function (Npc $npc) {
+                        return $npc->getTiendaDescripcion() 
+                            ? sprintf('%s — [%s]', $npc->getNombre(), $npc->getTiendaDescripcion())
+                            : $npc->getNombre();
+                    },
                 ])
+                
                 ->add('objeto', EntityType::class, [
                     'class' => Objetos::class,
                     'choice_label' => 'nombre',
                     'label' => 'Objeto ofertado',
                     'placeholder' => 'Selecciona el artículo...',
                     'required' => false,
+                    'attr' => ['class' => 'select2'],
                 ])
             ->end();
     }

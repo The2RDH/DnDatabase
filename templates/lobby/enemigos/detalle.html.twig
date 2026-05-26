@@ -1,0 +1,206 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ enemigo.nombre }} - Bestiario - Códice RPG{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+
+    <div class="mb-4">
+        <a href="{{ path('app_lobby_bestiario') }}" class="btn btn-sm btn-outline-secondary px-3 fw-bold">
+            <i class="fa-solid fa-arrow-left me-1"></i> Volver al Bestiario
+        </a>
+    </div>
+
+    <div class="row g-4">
+        
+        <div class="col-12 col-md-4 text-center">
+            <div class="card border-0 shadow-sm bg-white p-4 h-100">
+                
+                <div class="mb-4 rounded-circle bg-white shadow-sm border border-2 border-secondary-subtle mx-auto overflow-hidden p-1 position-relative" 
+                     style="width: 220px; height: 220px;">
+                    <img src="{{ asset(enemigo.token|default('media/tokens/default.png')) }}" 
+                         alt="{{ enemigo.nombre }}" 
+                         class="rounded-circle w-100 h-100" 
+                         style="object-fit: cover;">
+                </div>
+
+                <h1 class="h3 fw-bold text-dark mb-1">{{ enemigo.nombre }}</h1>
+                
+                {% if enemigo.nivel %}
+                    <span class="badge bg-danger px-3 py-1.5 fw-bold mb-3" style="font-size: 0.85rem;">
+                        <i class="fa-solid fa-skull me-1"></i> NIVEL DE PELIGRO {{ enemigo.nivel }}
+                    </span>
+                {% endif %}
+
+                <hr class="w-100 my-2">
+
+                <div class="text-start mt-3 px-1">
+                    <p class="mb-2.5 text-dark">
+                        <strong class="text-secondary small d-block">Tipo de Enemigo:</strong>
+                        <span class="fw-medium">
+                            <i class="fa-solid fa-spaghetti-monster-flying me-1 text-danger opacity-75"></i>
+                            {% if enemigo.tipo is not empty %}
+                                {% for t in enemigo.tipo %}{{ t.nombre }}{{ not loop.last ? ', ' }}{% endfor %}
+                            {% else %}
+                                Desconocido
+                            {% endif %}
+                        </span>
+                    </p>
+
+                    <p class="mb-2.5 text-dark">
+                        <strong class="text-secondary small d-block">Raza / Especie:</strong>
+                        <span class="fw-medium">
+                            <i class="fa-solid fa-dna me-1 text-info opacity-75"></i>
+                            {% if enemigo.getRazas is not empty %}
+                                {% for r in enemigo.getRazas %}{{ r.nombre }}{{ not loop.last ? ', ' }}{% endfor %}
+                            {% else %}
+                                Sin especificar
+                            {% endif %}
+                        </span>
+                    </p>
+
+                    <p class="mb-2.5 text-dark">
+                        <strong class="text-secondary small d-block">Clase:</strong>
+                        <span class="fw-medium">
+                            <i class="fa-solid fa-gavel me-1 text-muted"></i> 
+                            {{ enemigo.clase ? enemigo.clase.nombre : 'Sin Clase' }}
+                            {% if enemigo.especializacion %}
+                                <small class="text-muted">({{ enemigo.especializacion.nombre }})</small>
+                            {% endif %}
+                        </span>
+                    </p>
+                    
+                    <p class="mb-0 text-dark">
+                        <strong class="text-secondary small d-block">Gremio o Facción:</strong>
+                        <span class="fw-medium">
+                            <i class="fa-solid fa-flag me-1 text-dark opacity-75"></i>
+                            {% if enemigo.grupo is not empty %}
+                                {% for g in enemigo.grupo %}{{ g.nombre }}{{ not loop.last ? ', ' }}{% endfor %}
+                            {% else %}
+                                Independiente / Ninguno
+                            {% endif %}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-8">
+            <div class="card border-0 shadow-sm bg-white p-4 h-100">
+                
+                <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
+                    <h2 class="h5 fw-bold text-dark mb-0">
+                        <i class="fa-solid fa-book-bookmark text-danger me-1"></i> Descripción e Informes
+                    </h2>
+                    
+                    {# INFORMACIÓN BASE #}
+                    {% if enemigo.analizado %}
+                        <span class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1 fw-bold" style="font-size: 0.75rem;">
+                            <i class="fa-solid fa-circle-check me-1"></i> INFORMACIÓN ANALIZADA
+                        </span>
+                    {% else %}
+                        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2.5 py-1 fw-bold" style="font-size: 0.75rem;">
+                            <i class="fa-solid fa-circle-question me-1"></i> EN INVESTIGACIÓN
+                        </span>
+                    {% endif %}
+                </div>
+
+                <p class="text-muted mb-5 lh-base" style="white-space: pre-line;">
+                    {{ enemigo.descripcion ? enemigo.descripcion : 'No se disponen de anotaciones o extractos de diario sobre el comportamiento o anatomía de esta amenaza todavía.' }}
+                </p>
+
+                {% if enemigo.analizado %}
+                    
+                    {# ESTADISTICAS #}
+                    {% if enemigo.estadisticas %}
+                        <div class="mb-4">
+                            <h3 class="h6 fw-bold text-dark text-uppercase tracking-wider mb-3">
+                                <i class="fa-solid fa-chart-simple text-danger me-1"></i> Atributos de Combate
+                            </h3>
+                            <div class="alert alert-warning border-warning-subtle bg-light-subtle p-3 text-dark">
+                                <div class="row g-2 text-center text-uppercase fw-bold" style="font-size: 0.85rem;">
+                                    <div class="col-4 col-sm-2">
+                                        <div class="bg-white p-2 rounded border border-warning-subtle shadow-sm">
+                                            <span class="text-muted d-block small">FUE</span>
+                                            <span class="fs-5 text-dark">{{ enemigo.estadisticas.fuerza ?? '?' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 col-sm-2">
+                                        <div class="bg-white p-2 rounded border border-warning-subtle shadow-sm">
+                                            <span class="text-muted d-block small">DES</span>
+                                            <span class="fs-5 text-dark">{{ enemigo.estadisticas.destreza ?? '?' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 col-sm-2">
+                                        <div class="bg-white p-2 rounded border border-warning-subtle shadow-sm">
+                                            <span class="text-muted d-block small">CON</span>
+                                            <span class="fs-5 text-dark">{{ enemigo.estadisticas.constitucion ?? '?' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 col-sm-2">
+                                        <div class="bg-white p-2 rounded border border-warning-subtle shadow-sm">
+                                            <span class="text-muted d-block small">INT</span>
+                                            <span class="fs-5 text-dark">{{ enemigo.estadisticas.intelecto ?? '?' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 col-sm-2">
+                                        <div class="bg-white p-2 rounded border border-warning-subtle shadow-sm">
+                                            <span class="text-muted d-block small">SAB</span>
+                                            <span class="fs-5 text-dark">{{ enemigo.estadisticas.sabiduria ?? '?' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 col-sm-2">
+                                        <div class="bg-white p-2 rounded border border-warning-subtle shadow-sm">
+                                            <span class="text-muted d-block small">CAR</span>
+                                            <span class="fs-5 text-dark">{{ enemigo.estadisticas.carisma ?? '?' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {# FORTALEZAS Y DEBILIDADES #}
+                    <div class="row g-3">
+                        <div class="col-12 col-sm-6">
+                            <div class="card border border-success-subtle bg-success-subtle h-100 p-3">
+                                <h4 class="h6 fw-bold text-success mb-2 text-uppercase">
+                                    <i class="fa-solid fa-shield-halved me-1"></i> Fortalezas
+                                </h4>
+                                <p class="text-dark-emphasis small mb-0" style="white-space: pre-line;">
+                                    {{ enemigo.fortalezas ? enemigo.fortalezas : 'Ninguna fortaleza reseñable registrada.' }}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 col-sm-6">
+                            <div class="card border border-danger-subtle bg-danger-subtle h-100 p-3">
+                                <h4 class="h6 fw-bold text-danger mb-2 text-uppercase">
+                                    <i class="fa-solid fa-heart-crack me-1"></i> Debilidades
+                                </h4>
+                                <p class="text-dark-emphasis small mb-0" style="white-space: pre-line;">
+                                    {{ enemigo.debilidades ? enemigo.debilidades : 'No se han descubierto vulnerabilidades tácticas.' }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                {% else %}
+                    {# SI NO ESTÁ ANALIZADO #}
+                    <div class="card border-dashed border-secondary-subtle bg-light p-4 text-center my-4 rounded shadow-2xs">
+                        <div class="mb-3 text-secondary opacity-75">
+                            <i class="fa-solid fa-magnifying-glass-chart fa-3x animate-pulse"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark text-uppercase tracking-wide mb-2">Datos de Combate Clasificados</h4>
+                        <p class="text-muted small mx-auto mb-0" style="max-width: 520px; lh-base: 1.4;">
+                            Los informes anatómicos y de combate de esta criatura son insuficientes. Los jugadores deben estudiar su comportamiento en el entorno, interrogar a eruditos o enfrentarse a ella para registrar sus <span class="fw-semibold text-dark">Estadísticas base</span>, así como sus <span class="fw-semibold text-success">Fortalezas</span> y <span class="fw-semibold text-danger">Debilidades</span>.
+                        </p>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

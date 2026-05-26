@@ -33,7 +33,7 @@ class EnemigosAdmin extends AbstractAdmin
         $list
             ->addIdentifier('nombre', null, [
                 'label' => 'Nombre',
-                'header_style' => 'width: 15%;'
+                'header_style' => 'width: 20%;'
             ])
             ->add('nivel', null, [
                 'label' => 'Desafío',
@@ -42,7 +42,7 @@ class EnemigosAdmin extends AbstractAdmin
             ])
             ->add('clase', null, [
                 'label' => 'Clase',
-                'header_style' => 'width: 10%;',
+                'header_style' => 'width: 15%;',
                 'associated_property' => 'nombre'
             ])
             ->add('raza', null, [
@@ -52,15 +52,17 @@ class EnemigosAdmin extends AbstractAdmin
             ])
             ->add('tipo', null, [
                 'label' => 'Tipos',
-                'header_style' => 'width: 10%;',
+                'header_style' => 'width: 15%;',
                 'associated_property' => 'nombre'
-            ])
-            ->add('descripcion', null, [
-                'label' => 'Descripción',
-                'header_style' => 'width: 15%;'
             ])
             ->add('descubierto', 'boolean', [
                 'label' => 'Avistado',
+                'header_style' => 'text-align: center; width: 5%;',
+                'row_align' => 'center',
+                'editable' => true
+            ])
+            ->add('analizado', 'boolean', [
+                'label' => 'Analizado',
                 'header_style' => 'text-align: center; width: 5%;',
                 'row_align' => 'center',
                 'editable' => true
@@ -117,20 +119,21 @@ class EnemigosAdmin extends AbstractAdmin
                     'choice_label' => 'nombre'
                 ]
             ])  
-            ->add('descubierto', null, ['label' => '¿Descubierto por PJ?']);
+            ->add('descubierto', null, ['label' => '¿Descubierto por PJ?'])
+            ->add('analizado', null, ['label' => '¿Analizado?']);
     }
 
     protected function configureFormFields(FormMapper $form): void
     {
         $form
-            ->with('Información básica', ['class' => 'col-md-6'])
+            ->with('Información básica', ['class' => 'col-md-5'])
                 ->add('nombre', TextType::class, [
                     'label' => 'Nombre de la criatura'
                 ])
                 ->add('descripcion', TextareaType::class, [
                     'label' => 'Descripción',
                     'required' => false,
-                    'attr' => ['rows' => 3]
+                    'attr' => ['rows' => 5]
                 ])
                 ->add('imagen', TextType::class, [
                     'label' => 'Imagen',
@@ -142,7 +145,34 @@ class EnemigosAdmin extends AbstractAdmin
                 ])
             ->end()
 
-            ->with('Características', ['class' => 'col-md-6'])
+            ->with('Información relevante',  ['class' => 'col-md-6'])    
+                ->add('descubierto', CheckboxType::class, [
+                    'label' => '¿Descubierto?',
+                    'required' => false
+                ])    
+                ->add('analizado', CheckboxType::class, [
+                    'label' => '¿Analizado por los jugadores?',
+                    'required' => false
+                ])    
+                ->add('tipo', EntityType::class, [
+                    'class' => TipoEnemigos::class,
+                    'choice_label' => 'nombre',
+                    'label' => 'Tipo de Enemigo',
+                    'multiple' => true,
+                    'required' => false,
+                    'by_reference' => false
+                ])
+                ->add('grupo', EntityType::class, [
+                    'class' => GrupoEnemigos::class,
+                    'choice_label' => 'nombre',
+                    'label' => 'Facciones o Grupos Vinculados',
+                    'multiple' => true,
+                    'required' => false,
+                    'by_reference' => false
+                ])
+            ->end()
+
+            ->with('Características', ['class' => 'col-md-12'])
                 ->add('nivel', TextType::class, [
                     'label' => 'Nivel o Desafío',
                     'required' => false
@@ -187,29 +217,16 @@ class EnemigosAdmin extends AbstractAdmin
                         );
                     },
                 ])
-            ->end()
-
-            ->with('Información relevante',  ['class' => 'col-md-6'])    
-                ->add('descubierto', CheckboxType::class, [
-                    'label' => '¿Descubierto?',
-                    'required' => false
-                ])    
-                ->add('tipo', EntityType::class, [
-                    'class' => TipoEnemigos::class,
-                    'choice_label' => 'nombre',
-                    'label' => 'Categorías / Tipos de Enemigo (Múltiple)',
-                    'multiple' => true,
+                ->add('fortalezas', TextareaType::class, [
+                    'label' => 'Fortalezas (Inmunidades, resistencias, rasgos únicos...)',
                     'required' => false,
-                    'by_reference' => false
+                    'attr' => ['rows' => 4, 'placeholder' => 'Ej: Inmune a fuego, ventaja en tiradas de percepción...']
                 ])
-                ->add('grupo', EntityType::class, [
-                    'class' => GrupoEnemigos::class,
-                    'choice_label' => 'nombre',
-                    'label' => 'Facciones o Grupos Vinculados (Múltiple)',
-                    'multiple' => true,
+                ->add('debilidades', TextareaType::class, [
+                    'label' => 'Debilidades (Vulnerabilidades, penalizadores...)',
                     'required' => false,
-                    'by_reference' => false
-                ])
-            ->end();
+                    'attr' => ['rows' => 4, 'placeholder' => 'Ej: Vulnerable a daño sagrado, sufre ceguera en la luz...']
+                ])  
+            ->end();            
     }
 }

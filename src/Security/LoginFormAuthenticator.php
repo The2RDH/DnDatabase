@@ -16,6 +16,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
+
 class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
@@ -54,7 +55,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
         // 1. Si es MASTER o ADMIN, va directo al panel de Sonata
         if (in_array('ROLE_ADMIN', $roles, true) || in_array('ROLE_MASTER', $roles, true)) {
-            return new RedirectResponse($this->urlGenerator->generate('sonata_admin_dashboard'));
+            return new RedirectResponse($this->urlGenerator->generate('app_lobby_master'));
         }
 
         // 2. Si es un usuario normal, va a la interfaz principal de los jugadores

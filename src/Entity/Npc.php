@@ -60,6 +60,12 @@ class Npc
     #[ORM\ManyToOne(inversedBy: 'npcs')]
     private ?Lugares $lugar = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $tiendaDescripcion = null;
+
+    #[ORM\Column]
+    private ?bool $comerciante = null;
+
     public function __toString(): string
     {
         return $this->nombre ?? 'Sin establecer';
@@ -257,6 +263,30 @@ class Npc
     public function setLugar(?Lugares $lugar): static
     {
         $this->lugar = $lugar;
+
+        return $this;
+    }
+
+    public function getTiendaDescripcion(): ?string
+    {
+        return $this->tiendaDescripcion;
+    }
+
+    public function setTiendaDescripcion(?string $tiendaDescripcion): static
+    {
+        $this->tiendaDescripcion = $tiendaDescripcion;
+
+        return $this;
+    }
+
+    public function isComerciante(): ?bool
+    {
+        return $this->comerciante;
+    }
+
+    public function setComerciante(bool $comerciante): static
+    {
+        $this->comerciante = $comerciante;
 
         return $this;
     }

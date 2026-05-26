@@ -24,16 +24,24 @@
                     <td class="text-center fw-bold text-muted">{{ p.id }}</td>
                     <td>
                         <div class="d-flex align-items-center gap-3">
-                            {% if p.imagen %}
-                                <img src="{{ p.imagen }}" alt="{{ p.nombre }}" class="rounded-circle border" style="width: 40px; height: 40px; object-fit: cover;">
+                            {% if p.token is defined and p.token is not empty %}
+                                <img src="{{ asset('media/tokens/' ~ p.token) }}" alt="Token {{ p.nombre }}" 
+                                    class="rounded-circle border border-warning shadow-sm" 
+                                    style="width: 40px; height: 40px; object-fit: cover;">
+                            {% elseif p.clase is not null and p.clase.token is not empty %}
+                                <img src="{{ asset('media/class/' ~ p.clase.token) }}" alt="Token de Clase" 
+                                    class="rounded-circle border border-warning shadow-sm" 
+                                    style="width: 40px; height: 40px; object-fit: cover;">
                             {% else %}
-                                <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                    <i class="fa-solid fa-user-ninja"></i>
+                                <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center border border-warning shadow-sm" 
+                                    style="width: 40px; height: 40px; font-size: 0.9rem;">
+                                    <i class="fa-solid fa-user-shield"></i>
                                 </div>
                             {% endif %}
+
                             <div>
                                 <div class="fw-bold text-dark">{{ p.nombreCompleto }}</div>
-                                <small class="text-muted">Jugador: {{ p.jugador ? p.jugador : 'Ninguno (NPC)' }}</small>
+                                <small class="text-muted">Jugador: {{ p.jugador ? p.jugador.nick : 'Ninguno (NPC)' }}</small>
                             </div>
                         </div>
                     </td>

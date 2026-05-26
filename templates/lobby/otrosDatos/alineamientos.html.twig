@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Compendio - Alineamientos{% block title_append %}{% endblock %}{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+
+    <div class="mb-4">
+        <a href="{{ path('app_lobby_otrasCaracteristicas') }}" class="btn btn-sm btn-outline-secondary text-uppercase fw-bold">
+            <i class="fa-solid fa-arrow-left me-1"></i> Volver al Compendio
+        </a>
+    </div>
+
+    <div class="card shadow-sm border border-2 bg-dark text-white p-4 mb-4" style="background: linear-gradient(135deg, #1e1e24 0%, #2a2a35 100%);">
+        <div class="d-flex flex-column flex-sm-row align-items-center gap-4">
+            <div class="text-center text-sm-start flex-grow-1">
+                <h1 class="display-5 fw-black text-uppercase text-warning mb-0" style="letter-spacing: 0.5px;">Alineamientos</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <p class="text-dark-emphasis bg-light p-3 rounded border" style="line-height: 1.6; font-style: italic; font-size: 0.95rem;">
+            En este plano de existencia, los actos y filosofías de los mortales se sopesan bajo dos ejes cardinales: el Orden frente al Caos, y el Bien frente al Mal. A continuación se detallan los códigos de conducta registrados en el Códice.
+        </p>
+    </div>
+
+    <div class="row g-4">
+        {% if alineamientos is not empty %}
+            {% for al in alineamientos %}
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card shadow-sm border border-2 bg-white h-100 d-flex flex-column">
+                        <div class="card-body p-4 d-flex flex-column flex-grow-1">
+                            
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <div class="rounded-circle bg-light border border-2 text-danger d-flex align-items-center justify-content-center fw-black font-monospace shadow-sm" 
+                                     style="width: 44px; height: 44px; min-width: 44px; font-size: 0.95rem;">
+                                    {% if al.siglas is defined and al.siglas is not empty %}
+                                        {{ al.siglas }}
+                                    {% else %}
+                                        <i class="fa-solid fa-gavel small opacity-75"></i>
+                                    {% endif %}
+                                </div>
+                                
+                                <div>
+                                    <h3 class="h6 fw-bold text-uppercase text-dark mb-0" style="letter-spacing: 0.5px;">
+                                        {{ al.nombre }}
+                                    </h3>
+                                    <span class="text-muted d-block small text-uppercase font-monospace" style="font-size: 0.6rem; letter-spacing: 0.5px;">Filosofía</span>
+                                </div>
+                            </div>
+
+                            <p class="text-dark-emphasis mb-0 bg-light p-3 rounded border border-1 small flex-grow-1" style="line-height: 1.5;">
+                                {{ al.descripcion ?: 'No se disponen de registros extensos sobre la naturaleza de este alineamiento.' }}
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <!-- CASO VACÍO ¿Necesario? No creo, pero por si acaso fallase la BDD...-->
+            <div class="col-12">
+                <div class="card border border-2 bg-white text-center p-5 shadow-sm">
+                    <div class="text-secondary display-4 mb-3 opacity-50">
+                        <i class="fa-solid fa-circle-question"></i>
+                    </div>
+                    <h4 class="fw-bold text-uppercase text-secondary mb-2" style="font-size: 1.1rem;">Anales vacíos</h4>
+                    <p class="text-muted mx-auto mb-0 small" style="max-width: 480px;">
+                        No se ha encontrado ningún alineamiento moral registrado en la base de datos de la campaña.
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .fw-black { font-weight: 900; }
+</style>
+{% endblock %}

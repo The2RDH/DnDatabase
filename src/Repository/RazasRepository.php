@@ -16,6 +16,16 @@ class RazasRepository extends ServiceEntityRepository
         parent::__construct($registry, Razas::class);
     }
 
+    public function findAllOrderedByOrigen(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->leftJoin('r.origen', 'o') // Unimos la tabla de orígenes
+            ->orderBy('o.nombre', 'ASC') // Ordenamos alfabéticamente por el nombre del origen
+            ->addOrderBy('r.nombre', 'ASC') // Secundario: si comparten origen, ordena por nombre de raza
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Razas[] Returns an array of Razas objects
     //     */

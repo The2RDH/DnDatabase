@@ -15,6 +15,7 @@ use App\Entity\Personaje;
 use App\Entity\Clases;
 use App\Entity\Razas;
 use App\Entity\Alineamiento;
+use App\Entity\Especializacion;
 use App\Entity\Jugadores;
 use App\Entity\Estadisticas;
 
@@ -42,6 +43,11 @@ class PersonajeAdmin extends AbstractAdmin
                 'label' => 'Nivel',
                 'row_align' => 'center',
                 'header_style' => 'text-align: center; width: 80px;'
+            ])
+            ->add('oro', 'integer', [
+                'label' => 'Oro',
+                'row_align' => 'right',
+                'header_style' => 'text-align: right; width: 100px;',
             ])
             ->add('clase.nombre', null, [
                 'label' => 'Clase',
@@ -81,7 +87,8 @@ class PersonajeAdmin extends AbstractAdmin
             ->add('apellido', null, ['label' => 'Apellido'])
             ->add('nivel', null, ['label' => 'Nivel'])
             ->add('clase', null, ['label' => 'Clase'])
-            ->add('jugador', null, ['label' => 'Jugador']);
+            ->add('jugador', null, ['label' => 'Jugador'])
+            ->add('oro', null, ['label' => 'Monedas de Oro']);
     }
 
     protected function configureFormFields(FormMapper $form): void
@@ -120,11 +127,25 @@ class PersonajeAdmin extends AbstractAdmin
                     'label' => 'Nivel',
                     'empty_data' => '1'
                 ])
+                ->add('oro', IntegerType::class, [
+                    'label' => 'Bolsa de Oro',
+                    'required' => false,
+                    'empty_data' => '0',
+                    'attr' => [
+                        'min' => 0
+                    ]
+                ])
                 ->add('clase', EntityType::class, [
                     'class' => Clases::class,
                     'choice_label' => 'nombre',
                     'label' => 'Clase',
                     'placeholder' => 'Selecciona clase...',
+                ])
+                ->add('especializacion', EntityType::class, [
+                    'class' => Especializacion::class,
+                    'choice_label' => 'nombre',
+                    'label' => 'Especializacion',
+                    'placeholder' => 'Selecciona especializacion...',
                 ])
                 ->add('raza', EntityType::class, [
                     'class' => Razas::class,

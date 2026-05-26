@@ -11,7 +11,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Entity\Especializacion;
 use App\Entity\Clases;
-use App\Entity\DadosDescanso;
 use App\Entity\Recursos;
 
 class EspecializacionAdmin extends AbstractAdmin
@@ -39,8 +38,9 @@ class EspecializacionAdmin extends AbstractAdmin
                 'label' => 'Clase',
                 'header_style' => 'width: 15%;'
             ])
-            ->add('recurso', null, [
-                'label' => 'Recurso',
+            // CAMBIO: Apuntamos a 'recursos' (plural) y Sonata pintará la colección automáticamente
+            ->add('recursos', null, [
+                'label' => 'Recursos',
                 'header_style' => 'width: 15%;'
             ])
             ->add('descripcion', null, [
@@ -62,7 +62,8 @@ class EspecializacionAdmin extends AbstractAdmin
         $filter
             ->add('nombre', null, ['label' => 'Especialización'])
             ->add('clase', null, ['label' => 'Clase'])
-            ->add('recurso', null, ['label' => 'Recurso']);
+            // CAMBIO: El filtro debe buscar sobre la relación en plural 'recursos'
+            ->add('recursos', null, ['label' => 'Recursos']);
     }
 
     protected function configureFormFields(FormMapper $form): void
@@ -86,21 +87,13 @@ class EspecializacionAdmin extends AbstractAdmin
                     'label' => 'Pertenece a la Clase Base',
                     'placeholder' => 'Selecciona clase...',
                 ])
-                ->add('recurso', EntityType::class, [
+                ->add('recursos', EntityType::class, [
                     'class' => Recursos::class,
+                    'multiple' => true,
+                    'expanded' => false,
                     'choice_label' => 'nombre',
-                    'label' => 'Recurso que utiliza',
-                    'placeholder' => 'Selecciona recurso mecánico...',
+                    'label' => 'Recursos que utiliza',
                 ])
-                /*
-                ->add('dadosDescanso', EntityType::class, [
-                    'class' => DadosDescanso::class,
-                    'choice_label' => 'nombre', 
-                    'label' => 'Dados de Descanso (Opcional)',
-                    'placeholder' => 'Usa los dados base de la clase',
-                    'required' => false,
-                ])
-                */
             ->end();
     }
 }

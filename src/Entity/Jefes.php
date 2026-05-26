@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\JefesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: JefesRepository::class)]
@@ -53,6 +54,42 @@ class Jefes
 
     #[ORM\ManyToOne(inversedBy: 'jefes')]
     private ?Estado $estado = null;
+
+    #[ORM\ManyToOne(inversedBy: 'jefes')]
+    private ?Alineamiento $alineamiento = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $descripcion = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $lore = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $edad = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $token = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imagen = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $altura = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $peso = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $debilidades = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $fortalezas = null;
+
+    #[ORM\Column]
+    private ?bool $analizado = null;
+
+    #[ORM\ManyToOne(inversedBy: 'jefes')]
+    private ?Personaje $golpeGracia = null;
 
     public function __toString(): string
     {
@@ -234,6 +271,150 @@ class Jefes
     public function setEstado(?Estado $estado): static
     {
         $this->estado = $estado;
+
+        return $this;
+    }
+
+    public function getAlineamiento(): ?Alineamiento
+    {
+        return $this->alineamiento;
+    }
+
+    public function setAlineamiento(?Alineamiento $alineamiento): static
+    {
+        $this->alineamiento = $alineamiento;
+
+        return $this;
+    }
+
+    public function getDescripcion(): ?string
+    {
+        return $this->descripcion;
+    }
+
+    public function setDescripcion(?string $descripcion): static
+    {
+        $this->descripcion = $descripcion;
+
+        return $this;
+    }
+
+    public function getLore(): ?string
+    {
+        return $this->lore;
+    }
+
+    public function setLore(?string $lore): static
+    {
+        $this->lore = $lore;
+
+        return $this;
+    }
+
+    public function getEdad(): ?string
+    {
+        return $this->edad;
+    }
+
+    public function setEdad(?string $edad): static
+    {
+        $this->edad = $edad;
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): static
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function getImagen(): ?string
+    {
+        return $this->imagen;
+    }
+
+    public function setImagen(?string $imagen): static
+    {
+        $this->imagen = $imagen;
+
+        return $this;
+    }
+
+    public function getAltura(): ?string
+    {
+        return $this->altura;
+    }
+
+    public function setAltura(?string $altura): static
+    {
+        $this->altura = $altura;
+
+        return $this;
+    }
+
+    public function getPeso(): ?string
+    {
+        return $this->peso;
+    }
+
+    public function setPeso(?string $peso): static
+    {
+        $this->peso = $peso;
+
+        return $this;
+    }
+
+    public function getDebilidades(): ?string
+    {
+        return $this->debilidades;
+    }
+
+    public function setDebilidades(?string $debilidades): static
+    {
+        $this->debilidades = $debilidades;
+
+        return $this;
+    }
+
+    public function getFortalezas(): ?string
+    {
+        return $this->fortalezas;
+    }
+
+    public function setFortalezas(?string $fortalezas): static
+    {
+        $this->fortalezas = $fortalezas;
+
+        return $this;
+    }
+
+    public function isAnalizado(): ?bool
+    {
+        return $this->analizado;
+    }
+
+    public function setAnalizado(bool $analizado): static
+    {
+        $this->analizado = $analizado;
+
+        return $this;
+    }
+
+    public function getGolpeGracia(): ?Personaje
+    {
+        return $this->golpeGracia;
+    }
+
+    public function setGolpeGracia(?Personaje $golpeGracia): static
+    {
+        $this->golpeGracia = $golpeGracia;
 
         return $this;
     }
