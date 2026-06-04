@@ -74,16 +74,6 @@
         "symfony/polyfill-php81": "*",
         "symfony/polyfill-php82": "*"
     },
-    "scripts": {
-        "auto-scripts": {
-        },
-        "post-install-cmd": [
-            "@php -r \"echo 'Post-install skipped';\""
-        ],
-        "post-update-cmd": [
-            "@php -r \"echo 'Post-update skipped';\""
-        ]
-    },
     "conflict": {
         "symfony/symfony": "*"
     },
