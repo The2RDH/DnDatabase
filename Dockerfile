@@ -22,7 +22,7 @@ WORKDIR /var/www/html
 COPY . .
 
 # Instalar dependencias de PHP
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --no-scripts --allow-rootss
 
 # Ajustar permisos (importante para que Symfony pueda escribir en logs y caché)
 RUN chown -R www-data:www-data /var/www/html/var
