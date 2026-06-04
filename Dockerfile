@@ -19,4 +19,7 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts --no-inter
 
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
-RUN chown -R www-data:www-data /var/www/html/var
+RUN mkdir -p /var/www/html/var/cache /var/www/html/var/log && \
+    chown -R www-data:www-data /var/www/html/var
+
+EXPOSE 80
