@@ -78,10 +78,10 @@
         "auto-scripts": {
         },
         "post-install-cmd": [
-            "@auto-scripts"
+            "@php -r \"echo 'Post-install skipped';\""
         ],
         "post-update-cmd": [
-            "@auto-scripts"
+            "@php -r \"echo 'Post-update skipped';\""
         ]
     },
     "conflict": {
