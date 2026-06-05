@@ -21,7 +21,7 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts --no-inter
 RUN mkdir -p var/cache var/log && chown -R www-data:www-data var
 
 # Exponer puerto 80
-EXPOSE 80
+EXPOSE 8080
 
 # Comando para arrancar ambos servicios: Nginx y PHP-FPM
 CMD service nginx start && php-fpm
